@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+
 import androidx.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
@@ -12,6 +13,7 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,12 +23,12 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Client;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
-import org.smartregister.domain.Task;
-import org.smartregister.domain.Client;
-import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
@@ -39,20 +41,26 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.dao.ReportDao;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
+import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.DateTimeTypeConverter;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 
@@ -63,6 +71,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+
+import javax.annotation.Nullable;
 
 import timber.log.Timber;
 
@@ -108,7 +119,7 @@ import static org.smartregister.util.JsonFormUtils.getString;
 /**
  * Created by samuelgithengi on 3/25/19.
  */
-public class BaseInteractor implements BaseContract.BaseInteractor {
+public class BaseInteractor implements BaseContract.BaseInteractor, CallableInteractor {
 
     public static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
@@ -140,6 +151,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     private PreferencesUtil prefsUtil;
 
+    private CallableInteractor callableInteractor;
+
     public BaseInteractor(BasePresenter presenterCallBack) {
         revealApplication = RevealApplication.getInstance();
         this.presenterCallBack = presenterCallBack;
@@ -152,6 +165,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         taskUtils = TaskUtils.getInstance();
         database = revealApplication.getRepository().getReadableDatabase();
         prefsUtil = PreferencesUtil.getInstance();
+        callableInteractor = new GenericInteractor();
     }
 
     @VisibleForTesting
@@ -196,7 +210,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     }
 
     @Override
-    public  void handleLasteventFound(org.smartregister.domain.Event event) {
+    public void handleLasteventFound(org.smartregister.domain.Event event) {
         // handle in child class
     }
 
@@ -487,7 +501,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
                     EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
 
-            try(Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});) {
+            try (Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});) {
 
                 if (cursor.moveToFirst()) {
                     String eventJSON = cursor.getString(0);
@@ -501,5 +515,51 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             }
         });
 
+    }
+
+    @Override
+    public <T> void execute(Callable<T> callable, CallableInteractorCallBack<T> callableInteractorCallBack) {
+        callableInteractor.execute(callable, callableInteractorCallBack);
+    }
+
+    @Override
+    public <T> void execute(Callable<T> callable, CallableInteractorCallBack<T> callableInteractorCallBack, org.smartregister.util.AppExecutors.Request request) {
+        callableInteractor.execute(callable, callableInteractorCallBack, request);
+    }
+
+    @Override
+    public Map<String, Double> getReportCounts(@Nullable String currentLocationId) {
+
+        if (StringUtils.isBlank(currentLocationId))
+            return new HashMap<>();
+
+        ReportDao reportDao = ReportDao.getInstance();
+
+        double totalStructure = reportDao.getTotalStructures(currentLocationId);
+        double totalVisited = reportDao.getTotalVisitedStructures(currentLocationId);
+
+        double foundCov = ((totalVisited * 100) / totalStructure);
+
+        double unVisitedStructures = totalStructure - totalVisited;
+
+        double pzqDistributed = reportDao.getPZQDistributed(currentLocationId);
+        double pzqReceived = reportDao.getPZQReceived(currentLocationId);
+
+        double pzqReturned = reportDao.getPZQReturned(currentLocationId);
+        double pzqRemaining = pzqReceived - pzqReturned - pzqDistributed;
+
+
+        double totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocationId);
+        double totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocationId);
+        double successRate = totalExpectedRegistrations == 0 ? 0 : ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
+
+        Map<String, Double> result = new HashMap<>();
+        result.put(Constants.ReportCounts.FOUND_COVERAGE, foundCov);
+        result.put(Constants.ReportCounts.UNVISITED_STRUCTURES, unVisitedStructures);
+        result.put(Constants.ReportCounts.PZQ_DISTRIBUTED, pzqDistributed);
+        result.put(Constants.ReportCounts.PZQ_REMAINING, pzqRemaining);
+        result.put(Constants.ReportCounts.SUCCESS_RATE, successRate);
+
+        return result;
     }
 }

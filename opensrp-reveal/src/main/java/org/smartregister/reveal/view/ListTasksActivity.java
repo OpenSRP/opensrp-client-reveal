@@ -10,13 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -30,6 +23,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.arch.core.util.Function;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -56,6 +58,7 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncProgressBroadcastReceiver;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -79,7 +82,10 @@ import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
@@ -174,6 +180,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
             setContentView(R.layout.thailand_activity_list_tasks);
+        } else if (BuildConfig.BUILD_COUNTRY == Country.NTD_COMMUNITY) {
+            setContentView(R.layout.ntd_community_activity_list);
         } else {
             setContentView(R.layout.activity_list_tasks);
         }
@@ -373,7 +381,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     protected void initializeScaleBarPlugin(MapboxMap mapboxMap) {
-        if(displayDistanceScale()) {
+        if (displayDistanceScale()) {
             ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
             // Create a ScaleBarOptions object to use custom styling
             ScaleBarOptions scaleBarOptions = new ScaleBarOptions(getContext());
@@ -787,8 +795,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void onSyncComplete(FetchStatus fetchStatus)
-    {
+    public void onSyncComplete(FetchStatus fetchStatus) {
         onSyncInProgress(fetchStatus);
         //Check sync status and Update UI to show sync status
         drawerView.checkSynced();
@@ -881,6 +888,62 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void toggleProgressBarView(boolean syncing) {
         drawerView.toggleProgressBarView(syncing);
+    }
+
+    @Override
+    public void onReportCountReloaded(Map<String, Double> reportCounts) {
+        LinearLayout progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
+        if(progressIndicatorsGroupView == null) return; // NPE prevention for builds with no reporting
+
+        ProgressIndicatorView progressIndicatorView = progressIndicatorsGroupView.findViewById(R.id.progressIndicatorViewTitle);
+
+        Function<String, String> readIntMapValue = input -> {
+            Double value = reportCounts.get(input);
+            return value == null ? "0" : Integer.toString(value.intValue());
+        };
+
+        Function<String, String> readFormattedValue = input -> {
+            DecimalFormat df2 = new DecimalFormat("#.##");
+            df2.setRoundingMode(RoundingMode.UP);
+
+            Double value = reportCounts.get(input);
+            return value == null ? "0" : df2.format(value);
+        };
+
+
+        Double coverage = reportCounts.get(org.smartregister.reveal.util.Constants.ReportCounts.FOUND_COVERAGE);
+        int cov = coverage == null ? 0 : coverage.intValue();
+        progressIndicatorView.setProgress(cov);
+        progressIndicatorView.setTitle(getString(R.string.n_percent, cov));
+
+        View detailedReportCardView = findViewById(R.id.indicators_card_view);
+
+        TextView tvStructuresUnvisited = detailedReportCardView.findViewById(R.id.tvStructuresUnvisited);
+        tvStructuresUnvisited.setText(readIntMapValue.apply(org.smartregister.reveal.util.Constants.ReportCounts.UNVISITED_STRUCTURES));
+
+        TextView tvPZQDistributed = detailedReportCardView.findViewById(R.id.tvPZQDistributed);
+        tvPZQDistributed.setText(readFormattedValue.apply(org.smartregister.reveal.util.Constants.ReportCounts.PZQ_DISTRIBUTED));
+
+        TextView tvPZQRemaining = detailedReportCardView.findViewById(R.id.tvPZQRemaining);
+        tvPZQRemaining.setText(readFormattedValue.apply(org.smartregister.reveal.util.Constants.ReportCounts.PZQ_REMAINING));
+
+        TextView tvSuccessRate = detailedReportCardView.findViewById(R.id.tvSuccessRate);
+        tvSuccessRate.setText(readFormattedValue.apply(org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE) + "%");
+    }
+
+    @Override
+    public void onError(Exception e) {
+        Toast.makeText(getBaseContext(), R.string.an_error_occured, Toast.LENGTH_SHORT).show();
+        Timber.e(e);
+    }
+
+    @Override
+    public void setLoadingState(boolean isLoading) {
+        if (isLoading) {
+            showProgressDialog(R.string.please_wait, R.string.loading);
+        } else {
+            hideProgressDialog();
+        }
     }
 
     @Override

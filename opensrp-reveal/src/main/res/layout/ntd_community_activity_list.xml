@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/toolbar_task_map_view" />
+
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <org.smartregister.reveal.view.RevealMapView
+                android:id="@+id/kujakuMapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:mapbox_uiAttributionGravity="center_horizontal|bottom"
+                app:mapbox_uiLogoGravity="center_horizontal|bottom"
+                app:mapbox_uiLogoMarginRight="30dp"
+                app:locationClient="android_gps_client"
+                app:mapbox_uiRotateGestures="false" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/filter_tasks_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_margin="@dimen/hamburger_margin"
+                android:src="@drawable/ic_task_filter"
+                app:backgroundTint="@color/white"
+                app:elevation="6dp"
+                app:fabSize="mini" />
+
+            <FrameLayout
+                android:id="@+id/filter_tasks_count_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_margin="@dimen/hamburger_margin"
+                android:layout_marginTop="140dp"
+                android:background="@drawable/circle_background"
+                android:visibility="gone"
+                app:elevation="6dp">
+
+                <TextView
+                    android:id="@+id/filter_tasks_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/filter_count_bg"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/btn_add_structure"
+                    android:layout_width="@dimen/my_location_button_dimen"
+                    android:layout_height="@dimen/my_location_button_dimen"
+                    android:layout_margin="@dimen/my_location_btn_margin"
+                    android:background="@drawable/circle_button_black_border"
+                    android:contentDescription="@string/add_structure"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_add"
+                    android:textColor="@color/white" />
+
+
+                <include
+                    android:id="@+id/spray_card_view"
+                    layout="@layout/spray_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/mark_eligibility_status"
+                    layout="@layout/eligibility_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+
+                <include
+                    android:id="@+id/mosquito_collection_card_view"
+                    layout="@layout/mosquito_collection_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/larval_breeding_card_view"
+                    layout="@layout/larval_breeding_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/potential_area_of_transmission_card_view"
+                    layout="@layout/potential_area_of_transmission_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/indicators_card_view"
+                    layout="@layout/ntd_indicators_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/progressIndicatorsGroupView"
+                    layout="@layout/ntd_progress_indicators_view"
+                    android:layout_width="match_parent"
+                    android:visibility="visible"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|left" />
+
+                <include
+                    android:id="@+id/irs_verification_card_view"
+                    layout="@layout/irs_verification_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -20,6 +20,7 @@ import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -77,6 +78,12 @@ public interface ListTaskContract {
         void setSearchPhrase(String searchPhrase);
 
         void toggleProgressBarView(boolean syncing);
+
+        void onReportCountReloaded(Map<String, Double> reportCounts);
+
+        void onError(Exception e);
+
+        void setLoadingState(boolean isLoading);
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -123,5 +130,7 @@ public interface ListTaskContract {
         void findLastEvent(String featureId, String eventType);
       
         void onFociBoundaryLongClicked();
+
+        void fetchReportStats();
     }
 }

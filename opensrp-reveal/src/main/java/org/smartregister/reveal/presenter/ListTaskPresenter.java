@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
@@ -51,13 +52,16 @@ import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.EditFociBoundaryActivity;
+import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 import timber.log.Timber;
@@ -178,6 +182,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (drawerPresenter.isChangedCurrentSelection()) {
             listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
             listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
+            fetchReportStats();
         }
     }
 
@@ -289,7 +294,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
         } else if (isLongclick) {
             if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
-            onFeatureSelectedByLongClick(feature);
+                onFeatureSelectedByLongClick(feature);
             }
         } else {
             onFeatureSelectedByNormalClick(feature);
@@ -376,12 +381,41 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void findLastEvent(String featureId, String eventType) {
         listTaskInteractor.findLastEvent(featureId, eventType);
     }
+
     public void onFociBoundaryLongClicked() {
         revealApplication.setFeatureCollection(featureCollection);
         revealApplication.setOperationalArea(operationalArea);
 
         Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
         listTaskView.getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void fetchReportStats() {
+        if (!Country.NTD_COMMUNITY.equals(BuildConfig.BUILD_COUNTRY)) return;
+
+        Callable<Map<String, Double>> callable = () -> listTaskInteractor.getReportCounts(prefsUtil.getCurrentOperationalAreaId());
+        listTaskInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Double>>() {
+            @Override
+            public void onResult(Map<String, Double> results) {
+                if (listTaskView != null) {
+                    if (results != null) {
+                        listTaskView.onReportCountReloaded(results);
+                    } else {
+                        listTaskView.onError(new IllegalStateException("An error occurred while fetching results"));
+                    }
+                    listTaskView.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                if (listTaskView != null) {
+                    listTaskView.onError(ex);
+                    listTaskView.setLoadingState(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -454,9 +488,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         familyCardDetails.setDateCreated(formatDate(originalDate));
     }
 
-    public void startForm(Feature feature, CardDetails cardDetails, String interventionType){
+    public void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         startForm(feature, cardDetails, interventionType, null);
     }
+
     public void startForm(Feature feature, CardDetails cardDetails, String interventionType, Event event) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
@@ -688,6 +723,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             revealApplication.setRefreshMapOnEventSaved(false);
         }
         updateLocationComponentState();
+        fetchReportStats();
     }
 
     private void updateLocationComponentState() {

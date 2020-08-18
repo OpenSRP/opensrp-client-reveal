@@ -369,4 +369,11 @@
     <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
     <string name="progressBarLabel">Syncing %s : %d%% </string>
     <string name="manifest_version_parenthesis_placeholder">(%1$s)</string>
+    <string name="structures_unvisited">Structures unvisited</string>
+    <string name="pzq_distributed">PZQ distributed</string>
+    <string name="pzq_remaining">PZQ remaining</string>
+    <string name="children_treated_children_registered">Children Treated / Children Registered</string>
+    <string name="percentage_structures_found_and_visited">% structures found and visited</string>
+    <string name="is_this_location_eligible_to_register_a_family">Is this location eligible to register a family</string>
+    <string name="mark_eligibility_status">Mark eligibility status</string>
 </resources>

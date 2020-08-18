@@ -184,6 +184,8 @@ public interface Constants {
 
         String MDA_ADHERENCE = "MDA Adherence";
 
+        String NTD_MDA_DISPENSE = "MDA_Dispense";
+
         String MDA = "MDA";
 
         String IRS_VERIFICATION = "IRS Verification";
@@ -202,6 +204,11 @@ public interface Constants {
                 LARVAL_DIPPING, BCC, CASE_CONFIRMATION,
                 PAOT, IRS, IRS_VERIFICATION);
 
+        String DRUG_ALLOCATION = "Drug_allocation_to_CDD_team";
+
+        String DRUG_RETURNED = "Drug_return_from_CDD_team";
+
+        String CHILD_DRUG_DISTRIBUTION = "Drug distribution to Child";
     }
 
 
@@ -493,6 +500,14 @@ public interface Constants {
 
         String LAST_USER_LOCATION = "last_location";
 
+    }
+
+    interface ReportCounts {
+        String FOUND_COVERAGE = "foundCov";
+        String UNVISITED_STRUCTURES = "unvisitedstructures";
+        String PZQ_DISTRIBUTED = "PZQtabsdistributed";
+        String PZQ_REMAINING = "PZQtabsremaining";
+        String SUCCESS_RATE = "successrate";
     }
 
     interface DatabaseKeys {
