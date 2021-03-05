@@ -175,6 +175,20 @@
           },
           {
             "field": "eventType",
+            "field_value": "Child Registration",
+            "creates_case": [
+              "ec_child"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Update Child Registration",
+            "creates_case": [
+              "ec_child"
+            ]
+          },
+          {
+            "field": "eventType",
             "field_value": "tablet_accountability",
             "creates_case": [
               "ec_events"

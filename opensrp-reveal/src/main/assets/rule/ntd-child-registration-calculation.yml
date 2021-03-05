@@ -1,0 +1,21 @@
+---
+name: step1_sactaRevealId
+description: sactaRevealId status
+priority: 1
+condition: "true"
+actions:
+  - "calculation = step1_sactaRevealId = ((step1_sactaDob != null && step1_sactaDob != '') ? step1_sactaDob.substring(6,10) + step1_sactaDob.substring(3,5) + step1_sactaDob.substring(0,2) : '00000000') + step1_unique_id.replace('-','') "
+---
+name: step1_sactaAge
+description: sactaAge status
+priority: 1
+condition: "step1_sactaDob != null && step1_sactaDob != '' "
+actions:
+  - "calculation = step1_sactaAge = helper.getDuration(step1_sactaDob)"
+---
+name: step1_sactaAgeCat
+description: sactaAgeCat status
+priority: 1
+condition: "step1_sactaDob != null && step1_sactaDob != '' "
+actions:
+  - "calculation = step1_sactaAge = (Integer.parseInt(helper.getDuration(step1_sactaDob).split(' ')[0].replace('y','')) < 11) ? '6-10' : ((Integer.parseInt(helper.getDuration(step1_sactaDob).split(' ')[0].replace('y','')) < 16) ? '11-15' : ((Integer.parseInt(helper.getDuration(step1_sactaDob).split(' ')[0].replace('y','')) < 19) ? '16-18' : 'Adult' )) "

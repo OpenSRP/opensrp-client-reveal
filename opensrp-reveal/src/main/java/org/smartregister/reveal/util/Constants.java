@@ -23,6 +23,8 @@ public interface Constants {
 
     String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
 
+    String REGISTER_CHILD_EVENT = "Child Registration";
+
     String LARVAL_DIPPING_EVENT = "larval_dipping";
 
     String BEDNET_DISTRIBUTION_EVENT = "bednet_distribution";
@@ -130,6 +132,7 @@ public interface Constants {
         String FACILITY_LEVEL = "FACILITY_LEVEL";
         String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
         String CURRENT_OPERATIONAL_AREA_ID = "CURRENT_OPERATIONAL_AREA_ID";
+        String CURRENT_STRUCTURE = "CURRENT_STRUCTURE";
     }
 
     interface Tags {
@@ -142,6 +145,7 @@ public interface Constants {
         String CANTON = "Canton";
         String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
+        String SCHOOL = "School";
         String ZONE = "Zones";
     }
 
@@ -238,9 +242,15 @@ public interface Constants {
 
         String MDA_DISPENSE = "mda_dispense";
 
+        String MDA_ADVERSE_DRUG_REACTION = "mma_adr";
+
         String MDA_ADHERENCE = "mda_adherence";
 
         String IRS_VERIFICATION = "irs_verification";
+
+        String CHILD_REGISTRATION = "Child Registration";
+
+        String UPDATE_CHILD_REGISTRATION = "Update Child Registration";
 
         String IRS_LITE_VERIFICATION = "irs_lite_verification";
 
@@ -281,6 +291,8 @@ public interface Constants {
 
     interface BusinessStatus {
         String NOT_VISITED = "Not Visited";
+        String VISITED_DRUG_NOT_ADMINISTERED = "Drug Not Administered";
+        String VISITED_DRUG_ADMINISTERED = "Drug Administered";
         String NOT_SPRAYED = "Not Sprayed";
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
@@ -430,9 +442,19 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
+        String NTD_CHILD_REGISTRATION = "json.form/ntd_child_registration.json";
+
+        String NTD_DRUG_ADVERSE_REACTION = "json.form/ntd_mma_adr.json";
+
+        String NTD_MASS_DRUG_ADMINISTRATION = "json.form/ntd_mma_dispense.json";
+
         String CDD_SUPERVISOR_DAILY_SUMMARY_FORM = "json.form/community_drug_distributor_supervisor_daily_summary_form.json";
 
         String JSON_FORM_FOLDER = "json.form/";
+
+        String OPERATIONAL_AREA_TAG = "operational_area";
+
+        String STRUCTURES_TAG = "structures";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
 
@@ -572,6 +594,7 @@ public interface Constants {
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
         String SENEGAL_EC_CLIENT_FIELDS = "ec_client_fields_senegal.json";
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
+        String NTD_EC_CLIENT_FIELDS = "ec_client_fields_ntd.json";
         String KENYA_EC_CLIENT_FIELDS = "ec_client_fields_kenya.json";
     }
 
@@ -598,6 +621,16 @@ public interface Constants {
 
     }
 
+    interface ChildRegister {
+        String MMA_COVERAGE = "mma_coverage";
+        String MMA_CHILDREN_REGISTERED = "children_registered";
+        String MMA_TARGET_REMAINING = "sac_remain";
+        String MMA_NOT_VISITED = "not_visited";
+        String MMA_VISITED_NOT_ADMINISTERED = "visited_no_mma";
+        String MMA_VISITED_AND_ADMINISTERED = "visited_and_mma";
+        String DEFAULT_RESIDENCE = "default_residence";
+    }
+
     interface EventsRegister {
         String VIEW_IDENTIFIER = "event_register";
 
@@ -607,6 +640,8 @@ public interface Constants {
     interface DatabaseKeys {
 
         String TASK_TABLE = "task";
+
+        String CHILD_TABLE = "ec_child";
 
         String SPRAYED_STRUCTURES = "sprayed_structures";
 
@@ -623,6 +658,8 @@ public interface Constants {
         String CODE = "code";
 
         String FOR = "for";
+
+        String LOCATION = "location";
 
         String BUSINESS_STATUS = "business_status";
 
@@ -659,6 +696,16 @@ public interface Constants {
         String FIRST_NAME = "first_name";
 
         String LAST_NAME = "last_name";
+
+        String MIDDLE_NAME = "middle_name";
+
+        String GENDER = "gender";
+
+        String GRADE = "grade";
+
+        String UNIQUE_ID = "unique_id";
+
+        String AGE = "age";
 
         String GROUPED_STRUCTURE_TASK_CODE_AND_STATUS = "grouped_structure_task_code_and_status";
 
@@ -717,6 +764,8 @@ public interface Constants {
         String EVENT_TABLE = "event";
 
         String PERSON_TESTED = "person_tested";
+
+        String DOB = "dob";
 
         String LOCATION_TABLE = "location";
 
@@ -795,5 +844,14 @@ public interface Constants {
         String FORM_NAME = "form_name";
         String FILTER_SORT_PARAMS = "filter_sort_params";
         String FILTER_CONFIGURATION = "filter_configuration";
+    }
+
+    interface ChildFilter {
+        String FILTER_PAYLOAD = "filter_payload";
+
+        String FILTER_AGE = "filter_age";
+        String FILTER_GRADE = "filter_grade";
+
+        String SORT = "sort";
     }
 }

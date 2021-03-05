@@ -1,0 +1,7 @@
+---
+name: step1_other_mmaAdrType
+description: step1_other_mmaAdrType
+priority: 1
+condition: "step1_mmaAdrType.contains('other')"
+actions:
+  - "isRelevant = true"

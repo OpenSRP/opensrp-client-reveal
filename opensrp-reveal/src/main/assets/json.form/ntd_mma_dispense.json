@@ -1,0 +1,368 @@
+{
+  "count": "1",
+  "encounter_type": "mda_dispense",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "MDA Dispense",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "mmaConsent",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaConsent",
+        "type": "native_radio",
+        "label": "Has the child's parent/caregiver granted consent?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes",
+            "openmrs_entity": "Yes",
+            "openmrs_entity_id": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "mmaheight",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaheight",
+        "type": "edit_text",
+        "hint": "Height in cm",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        },
+        "v_max": {
+          "value": "200",
+          "err": "Child height field to maximum 200cm"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mmaDrugAdmin",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaDrugAdmin",
+        "type": "native_radio",
+        "label": "Was the drug administered?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mmaNoDrugAdminReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaNoDrugAdminReason",
+        "type": "native_radio",
+        "label": "Why was the drug not administered?",
+        "options": [
+          {
+            "key": "refused",
+            "text": "Refused",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "mmaNoDrugAdminReason"
+          },
+          {
+            "key": "contraindicated",
+            "text": "Contraindicated",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "contraindicated"
+          },
+          {
+            "key": "pregnant",
+            "text": "Pregnant",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "pregnant"
+          },
+          {
+            "key": "sick",
+            "text": "Sick",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "sick"
+          },
+          {
+            "key": "other",
+            "text": "Other",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "other_imaNoDrugAdminReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "other_imaNoDrugAdminReason",
+        "type": "edit_text",
+        "hint": "Specify other reason",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mmaTreatCateg",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaTreatCateg",
+        "type": "native_radio",
+        "label": "Treatment category",
+        "options": [
+          {
+            "key": "albOneTab",
+            "text": "Alb 1 tab",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "albOneTab"
+          },
+          {
+            "key": "PrazByHeight",
+            "text": "Praziquental (by height)",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "PrazByHeight"
+          },
+          {
+            "key": "PrazPlusAlb",
+            "text": "Praz (by height) + 1 tab Alb",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "PrazPlusAlb"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mmaPzqDosage",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaPzqDosage",
+        "type": "edit_text",
+        "hint": "PZQ pills to be given",
+        "read_only": "True",
+        "text_size": "8sp",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mmaPzqDosageGiven",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaPzqDosageGiven",
+        "type": "native_radio",
+        "label": "Number of pills (PZQ) given",
+        "options": [
+          {
+            "key": "one",
+            "text": "1",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "1"
+          },
+          {
+            "key": "onePointFive",
+            "text": "1.5",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "1.5"
+          },
+          {
+            "key": "two",
+            "text": "2",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "2"
+          },
+          {
+            "key": "twoPointFive",
+            "text": "2.5",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "2.5"
+          },
+          {
+            "key": "three",
+            "text": "3",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "3"
+          },
+          {
+            "key": "four",
+            "text": "4",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "4"
+          },
+          {
+            "key": "five",
+            "text": "5",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "5"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mmaAlbGiven",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaAlbGiven",
+        "type": "native_radio",
+        "label": "Was 1 ALB pill given?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "No"
+          }
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

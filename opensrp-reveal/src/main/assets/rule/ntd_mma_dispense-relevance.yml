@@ -1,0 +1,56 @@
+---
+name: step1_mmaheight
+description: step1_mmaheight
+priority: 1
+condition: "step1_mmaConsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mmaDrugAdmin
+description: step1_mmaDrugAdmin
+priority: 1
+condition: "step1_mmaConsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mmaNoDrugAdminReason
+description: step1_mmaNoDrugAdminReason
+priority: 1
+condition: "step1_mmaDrugAdmin.contains('No')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_other_imaNoDrugAdminReason
+description: step1_other_imaNoDrugAdminReason
+priority: 1
+condition: "step1_mmaNoDrugAdminReason.contains('other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mmaTreatCateg
+description: step1_mmaTreatCateg
+priority: 1
+condition: "step1_mmaDrugAdmin.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mmaPzqDosage
+description: step1_mmaPzqDosage
+priority: 1
+condition: "step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mmaPzqDosageGiven
+description: step1_mmaPzqDosageGiven
+priority: 1
+condition: "step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mmaAlbGiven
+description: step1_mmaAlbGiven
+priority: 1
+condition: "step1_mmaTreatCateg.contains('albOneTab') || step1_mmaTreatCateg.contains('PrazPlusAlb')"
+actions:
+  - "isRelevant = true"

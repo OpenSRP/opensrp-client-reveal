@@ -18,4 +18,8 @@ public class DrawerMenuViewShadow {
     public void onResume() {//Do nothing
     }
 
+    @Implementation
+    public void openDrawerLayout(){
+        //Do nothing
+    }
 }

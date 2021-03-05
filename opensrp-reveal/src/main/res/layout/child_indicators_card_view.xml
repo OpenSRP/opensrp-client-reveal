@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="5dp"
+    card_view:cardCornerRadius="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/btn_collapse_indicators_card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:src="@drawable/ic_keyboard_arrow_down" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp">
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                style="@style/CustomFontTextViewStyle.ClientList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:singleLine="true"
+                android:text="SAC visited and MMA"
+                android:textColor="@color/text_black"
+                android:textSize="17sp" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/tvDoseRecordedAndDrugsGiven"
+                style="@style/CustomFontTextViewStyle.ClientList.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="0dp"
+                android:text="10"
+                android:textColor="@color/light_grey_text"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                style="@style/CustomFontTextViewStyle.ClientList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingStart="0dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="0dp"
+                android:singleLine="true"
+                android:text="SAC visited but no MMA"
+                android:textColor="@color/text_black"
+                android:textSize="17sp" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/tvChildrenNotAdministeredMedicine"
+                style="@style/CustomFontTextViewStyle.ClientList.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="0dp"
+                android:text="10"
+                android:textColor="@color/light_grey_text"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                style="@style/CustomFontTextViewStyle.ClientList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingStart="0dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="0dp"
+                android:singleLine="true"
+                android:text="SAC not visited yet"
+                android:textColor="@color/text_black"
+                android:textSize="17sp" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/tvTotalChildrenRemaining"
+                style="@style/CustomFontTextViewStyle.ClientList.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="0dp"
+                android:text="10"
+                android:textColor="@color/light_grey_text"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                style="@style/CustomFontTextViewStyle.ClientList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingStart="0dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="0dp"
+                android:singleLine="true"
+                android:text="SAC remaining to reach target of 90%"
+                android:textColor="@color/text_black"
+                android:textSize="17sp" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/tvChildrenRemainingUntilTarget"
+                style="@style/CustomFontTextViewStyle.ClientList.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="0dp"
+                android:text="10"
+                android:textColor="@color/light_grey_text"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

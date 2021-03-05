@@ -51,6 +51,8 @@ public interface BaseDrawerContract {
 
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
+        void showStructureSelector(Pair<String, ArrayList<String>> locationHierarchy);
+
         void showPlanSelector(List<String> campaigns, String entireTreeString);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
@@ -79,6 +81,10 @@ public interface BaseDrawerContract {
 
         void onOperationalAreaSelectorClicked(ArrayList<String> name);
 
+        void onShowStructureSelector();
+
+        void onStructureSelectorClicked(ArrayList<String> name);
+
         void onShowPlanSelector();
 
         void onPlanSelectorClicked(ArrayList<String> value, ArrayList<String> name);
@@ -102,6 +108,8 @@ public interface BaseDrawerContract {
         void updateSyncStatusDisplay(boolean synced);
 
         void onShowFilledForms();
+
+        void onPlanAutoSelected(String planName, String planId);
     }
 
     interface Interactor {
@@ -111,5 +119,7 @@ public interface BaseDrawerContract {
         void validateCurrentPlan(String selectedOperationalArea, String currentPlanId);
 
         void checkSynced();
+
+        void autoSelectPlan(String jurisdictionName);
     }
 }

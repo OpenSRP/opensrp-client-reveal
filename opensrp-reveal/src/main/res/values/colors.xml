@@ -51,5 +51,6 @@
     <color name="background_alert_red">#FFBDBD</color>
     <color name="background_alert_green">#B3EDC3</color>
 
+    <color name="light_gray">#FAFAFA</color>
 
 </resources>

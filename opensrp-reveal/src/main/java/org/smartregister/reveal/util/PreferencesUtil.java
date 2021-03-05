@@ -19,6 +19,7 @@ import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERAT
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PROVINCE;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.Preferences.FACILITY_LEVEL;
 import static org.smartregister.reveal.util.Constants.TILDE;
 
@@ -66,6 +67,14 @@ public class PreferencesUtil {
 
     public String getCurrentOperationalAreaId() {
         return allSharedPreferences.getPreference(CURRENT_OPERATIONAL_AREA_ID);
+    }
+
+    public String getCurrentStructure() {
+        return allSharedPreferences.getPreference(CURRENT_STRUCTURE);
+    }
+
+    public void setCurrentStructure(String structure) {
+        allSharedPreferences.savePreference(CURRENT_STRUCTURE, structure);
     }
 
     public void setCurrentDistrict(String district) {
