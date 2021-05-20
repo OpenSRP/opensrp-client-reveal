@@ -49,6 +49,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
@@ -58,10 +59,12 @@ import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -83,6 +86,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
+import static org.smartregister.reveal.util.Constants.EventType.DAILY_SUMMARY_EVENT;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
@@ -92,6 +96,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.JsonForm.COLLECTION_DATE;
+import static org.smartregister.reveal.util.Constants.JsonForm.COMPOUND_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.PHYSICAL_TYPE;
@@ -105,6 +111,9 @@ import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
+import static org.smartregister.util.JsonFormUtils.KEY;
+import static org.smartregister.util.JsonFormUtils.VALUE;
+import static org.smartregister.util.JsonFormUtils.VALUES;
 import static org.smartregister.util.JsonFormUtils.getJSONObject;
 import static org.smartregister.util.JsonFormUtils.getString;
 
@@ -212,6 +221,41 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         JSONObject metadata = getJSONObject(jsonForm, METADATA);
         Event event = JsonFormUtils.createEvent(fields, metadata, Utils.getFormTag(), entityId, encounterType, bindType);
         JSONObject eventJson = new JSONObject(gson.toJson(event));
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.SENEGAL)){
+            JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(fields,COMPOUND_STRUCTURE);
+            JSONArray obsList = (JSONArray) eventJson.get("obs");
+            if(compoundStructureField != null) {
+                for(int i =0; i < obsList.length();i++){
+                    JSONObject obs = (JSONObject) obsList.get(i);
+                    if(obs.get("formSubmissionField").equals(COMPOUND_STRUCTURE)){
+                        JSONObject value = (JSONObject) new JSONArray(compoundStructureField.get(VALUE).toString()).get(0);
+                        JSONArray values  = new JSONArray();
+                        values.put(value.get(KEY));
+                        obs.put(VALUES,values);
+                        obs.put("fieldCode",COMPOUND_STRUCTURE);
+                        break;
+                    }
+                }
+            }
+
+            if(DAILY_SUMMARY_EVENT.equals(event.getEventType())){
+                JSONObject collectionDateField = JsonFormUtils.getFieldJSONObject(fields, COLLECTION_DATE);
+                for(int i=0; i < obsList.length() ;i++){
+                    JSONObject obs = (JSONObject) obsList.get(i);
+                    if(obs.get("fieldCode").equals(COLLECTION_DATE)){
+                       JSONArray values = obs.optJSONArray("values");
+                       if(values != null){
+                           String oldFormatDate = (String) values.get(0);
+                           List<String> items = Arrays.asList(oldFormatDate.split("-"));
+                           String newFormatDate = String.format("%s-%s-%s",items.get(2),items.get(1),items.get(0));
+                           obs.put("values", new JSONArray().put(newFormatDate));
+                           collectionDateField.put("value",newFormatDate);
+                           break;
+                       }
+                    }
+                }
+            }
+        }
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
         eventClientRepository.addEvent(entityId, eventJson);
         return gson.fromJson(eventJson.toString(), org.smartregister.domain.Event.class);

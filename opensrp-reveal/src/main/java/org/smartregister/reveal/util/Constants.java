@@ -71,7 +71,7 @@ public interface Constants {
     String ACTIONS = "actions";
     String THAILAND_SYNC_INTERVAL = "720";
 
-    int SYNC_BACK_OFF_DELAY = 8000;
+    int SYNC_BACK_OFF_DELAY = 5000;
 
     interface CONFIGURATION {
         String LOGIN = "login";
@@ -122,6 +122,8 @@ public interface Constants {
         String WARDS = "wards";
         String COMMUNITY_DRUG_DISTRIBUTORS = "community_drug_distributors";
         String HEALTH_WORKER_SUPERVISORS = "health_worker_supervisors";
+        String VILLAGES = "villages";
+
 
     }
 
@@ -281,6 +283,7 @@ public interface Constants {
         String STRUCTURE_TABLE = "structure";
         String EC_EVENTS_TABLE = "ec_events";
         String EC_EVENTS_SEARCH_TABLE = "ec_events_search";
+        String SPRAYED_STRUCTURES = "sprayed_structures";
     }
 
     interface BusinessStatus {
@@ -555,6 +558,18 @@ public interface Constants {
 
         String CDD_SUPERVISION_TASK_COMPLETE = "task_complete";
 
+        String LOCATION_ZONE = "location_zone";
+
+
+        String COMPOUND_STRUCTURE = "compoundStructure";
+
+        String ROOMS_SPRAYED = "rooms_sprayed";
+
+        String ROOMS_ELIGIBLE = "rooms_eligible";
+
+        String COLLECTION_DATE = "collection_date";
+
+
     }
 
     interface DateFormat {
@@ -745,6 +760,15 @@ public interface Constants {
         Object GEOJSON = "geojson";
 
         String DATA_COLLECTION_DATE = "data_collection_date";
+
+
+        String STRUCTURE_HEAD_NAME = "structure_head_name";
+
+        String COMPOUND_HEAD_NAME = "compound_head_name";
+
+        String COMPOUND_STRUCTURE = "compound_structure";
+
+        String SPRAY_DATE = "spray_date";
 
     }
 

@@ -8,13 +8,13 @@
       "openmrs_entity_parent": "",
       "openmrs_entity": "concept",
       "openmrs_data_type": "start",
-      "openmrs_entity_id": ""
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     },
     "end": {
       "openmrs_entity_parent": "",
       "openmrs_entity": "concept",
       "openmrs_data_type": "end",
-      "openmrs_entity_id": ""
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     },
     "today": {
       "openmrs_entity_parent": "",
@@ -69,8 +69,65 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "name",
+        "hint": "Please write the name of the Zone/Location",
+        "v_regex": {
+          "value": "[A-Za-z\\s\.\-]*",
+          "err": "Please enter a valid name"
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "spray_areas",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "multi_select_list",
+        "buttonText": "Select the SA(s) that this spray operator worked in today",
+        "dialogTitle": "Select the SA(s) that this spray operator worked in today",
+        "searchHint": "Type Spray Area Name",
+        "source": "true",
+        "repositoryClass":"org.smartregister.reveal.model.SprayAreaMultiSelectRepository",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "district_manager",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
         "type": "spinner",
-        "hint": "Name of location",
+        "hint": "District Manager name",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "supervisor",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of Coordinator/Decision Maker/Supervisor",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "teamLeader",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of Team Leader who conducted observation",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -181,7 +238,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many full sachets were RECEIVED by the SOP at the begining of the day?",
+        "hint": "How many full bottles/sachets were RECEIVED by the SOP at the beginning of the day?",
         "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
@@ -212,7 +269,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many FULL sachets were RETURNED by the SOP at the end of the day?",
+        "hint": "How many FULL bottles/sachets were RETURNED by the SOP at the end of the day?",
         "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
@@ -243,7 +300,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many EMPTY sachets were RETURNED by the SOP at the end of the day?",
+        "hint": "How many EMPTY bottles/sachets were RETURNED by the SOP at the end of the day?",
         "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
@@ -291,7 +348,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many sachets were lost or damaged?",
+        "hint": "How many sachets/bottles were lost or damaged?",
         "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
@@ -353,7 +410,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "A total of {bottles_accounted} sachets are unaccounted for.",
+        "text": "A total of {bottles_accounted} bottles / sachets are unaccounted for.",
         "text_color": "#CF0800",
         "toaster_type": "info",
         "text_size": "8sp",
@@ -408,7 +465,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Select a reason for the unaccounted sachets",
+        "label": "Select a reason for the unaccounted bottles/sachets",
         "text_size": "8sp",
         "options": [
           {
@@ -442,7 +499,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please write the reason for the unaccounted sachets",
+        "hint": "Please write the reason for the unaccounted bottles/sachets",
         "text_size": "8sp",
         "v_required": {
           "value": "true",

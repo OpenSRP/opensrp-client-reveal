@@ -111,6 +111,30 @@
             "field": "obs.fieldCode",
             "concept": "mopUp"
           }
+        },
+        {
+          "column_name": "compound_head_name",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "compoundheadname"
+          }
+        },
+        {
+          "column_name": "structure_head_name",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "structureheadname"
+          }
+        },
+        {
+          "column_name": "compound_structure",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "compoundStructure"
+          }
         }
       ]
     },
