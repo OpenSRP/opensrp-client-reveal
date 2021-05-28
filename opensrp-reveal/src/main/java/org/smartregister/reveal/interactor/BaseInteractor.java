@@ -49,6 +49,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
@@ -92,6 +93,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.JsonForm.COMPOUND_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.PHYSICAL_TYPE;
@@ -105,6 +107,9 @@ import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
+import static org.smartregister.util.JsonFormUtils.KEY;
+import static org.smartregister.util.JsonFormUtils.VALUE;
+import static org.smartregister.util.JsonFormUtils.VALUES;
 import static org.smartregister.util.JsonFormUtils.getJSONObject;
 import static org.smartregister.util.JsonFormUtils.getString;
 
@@ -212,6 +217,21 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         JSONObject metadata = getJSONObject(jsonForm, METADATA);
         Event event = JsonFormUtils.createEvent(fields, metadata, Utils.getFormTag(), entityId, encounterType, bindType);
         JSONObject eventJson = new JSONObject(gson.toJson(event));
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.SENEGAL)){
+            JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(fields,COMPOUND_STRUCTURE);
+            JSONArray obsList = (JSONArray) eventJson.get("obs");
+            for(int i =0; i < obsList.length();i++){
+                JSONObject obs = (JSONObject) obsList.get(i);
+                if(obs.get("formSubmissionField").equals(COMPOUND_STRUCTURE)){
+                    JSONObject value = (JSONObject) new JSONArray(compoundStructureField.get(VALUE).toString()).get(0);
+                    JSONArray values  = new JSONArray();
+                    values.put(value.get(KEY));
+                    obs.put(VALUES,values);
+                    break;
+                }
+
+            }
+        }
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
         eventClientRepository.addEvent(entityId, eventJson);
         return gson.fromJson(eventJson.toString(), org.smartregister.domain.Event.class);

@@ -342,12 +342,34 @@
         }
       },
       {
+        "key": "compoundStructure",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "multi_select_list",
+        "dialogTitle": "Select name of the head of the compound",
+        "buttonText": "+ Select name of the head of the compound",
+        "searchHint": "Type Name head of the compound",
+        "text_size": "8sp",
+        "maxSelectable": "1",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:compoundheadstructure": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
+          }
+        }
+      },
+      {
         "key": "structureheadname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "If the head of the compound does not live in this structure, who is the head of this structure? ",
+        "hint": "Enter the name of the head of this structure",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
