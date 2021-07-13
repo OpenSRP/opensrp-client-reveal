@@ -61,9 +61,11 @@ import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
@@ -210,182 +212,191 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         String value = jsonObject.optString(JsonFormConstants.VALUE);
 
+        Callable<RevealMapView> mapViewCallable = () -> {
+            final int canvasId = ViewUtil.generateViewId();
 
-        List<View> views = new ArrayList<>(1);
+            String operationalArea = null;
+            String featureCollection = null;
+            boolean locationComponentActive = false;
+            com.mapbox.geojson.Feature selectedFeature = null;
 
-        final int canvasId = ViewUtil.generateViewId();
-        mapView = (RevealMapView) LayoutInflater.from(context)
-                .inflate(R.layout.item_geowidget, null);
-
-        String operationalArea = null;
-        String featureCollection = null;
-        boolean locationComponentActive = false;
-        com.mapbox.geojson.Feature selectedFeature = null;
-
-        try {
-            operationalArea = RevealApplication.getInstance().getOperationalArea().toJson();
-            featureCollection = RevealApplication.getInstance().getFeatureCollection().toJson();
-            locationComponentActive = new JSONObject(formFragment.getCurrentJsonState()).optBoolean(LOCATION_COMPONENT_ACTIVE);
-            if (StringUtils.isNotBlank(value)) {
-                selectedFeature = com.mapbox.geojson.Feature.fromJson(value);
+            try {
+                operationalArea = RevealApplication.getInstance().getOperationalArea().toJson();
+                featureCollection = RevealApplication.getInstance().getFeatureCollection().toJson();
+                locationComponentActive = new JSONObject(formFragment.getCurrentJsonState()).optBoolean(LOCATION_COMPONENT_ACTIVE);
+                if (StringUtils.isNotBlank(value)) {
+                    selectedFeature = com.mapbox.geojson.Feature.fromJson(value);
+                }
+            } catch (JSONException e) {
+                Timber.e(e, "error extracting geojson form jsonform");
             }
-        } catch (JSONException e) {
-            Timber.e(e, "error extracting geojson form jsonform");
-        }
 
-        mapView.setId(canvasId);
-        mapView.onCreate(null);
-        mapView.setDisableMyLocationOnMapMove(true);
-        mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
+            mapView = (RevealMapView) LayoutInflater.from(context)
+                    .inflate(R.layout.item_geowidget, null);
+
+            mapView.setId(canvasId);
+            mapView.onCreate(null);
+            mapView.setDisableMyLocationOnMapMove(true);
+            mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
 
-        myLocationButton = mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+            myLocationButton = mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
 
-        com.mapbox.geojson.Feature operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
+            com.mapbox.geojson.Feature operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
 
-        this.operationalArea = operationalAreaFeature;
+            this.operationalArea = operationalAreaFeature;
 
-        createBoundaryLayer(operationalAreaFeature, context);
+            createBoundaryLayer(operationalAreaFeature, context);
 
-        String finalFeatureCollection = featureCollection;
+            String finalFeatureCollection = featureCollection;
 
-        boolean finalLocationComponentActive = locationComponentActive;
-        com.mapbox.geojson.Feature finalSelectedFeature = selectedFeature;
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull MapboxMap mapboxMap) {
+            boolean finalLocationComponentActive = locationComponentActive;
+            com.mapbox.geojson.Feature finalSelectedFeature = selectedFeature;
+            mapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
-                String satelliteStyle = BuildConfig.SELECT_JURISDICTION ? context.getString(R.string.reveal_select_jurisdiction_style) : context.getString(R.string.reveal_satellite_style);
-                Style.Builder builder = new Style.Builder().fromUri(satelliteStyle);
+                    String satelliteStyle = BuildConfig.SELECT_JURISDICTION ? context.getString(R.string.reveal_select_jurisdiction_style) : context.getString(R.string.reveal_satellite_style);
+                    Style.Builder builder = new Style.Builder().fromUri(satelliteStyle);
 
-                mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
-                    @Override
-                    public void onStyleLoaded(@NonNull Style style) {
-                        GeoJsonSource geoJsonSource = style.getSourceAs(context.getString(R.string.reveal_datasource_name));
+                    mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+                            GeoJsonSource geoJsonSource = style.getSourceAs(context.getString(R.string.reveal_datasource_name));
 
-                        if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
-                            geoJsonSource.setGeoJson(finalFeatureCollection);
+                            if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
+                                geoJsonSource.setGeoJson(finalFeatureCollection);
+                            }
+
+                            String baseMapFeatureString = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.base_map_feature_json), context);
+
+                            if (BuildConfig.DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK) {
+                                RevealMapHelper.addOutOfBoundaryMask(style, operationalAreaFeature,
+                                        com.mapbox.geojson.Feature.fromJson(baseMapFeatureString), context);
+                            }
+
+                            RevealMapHelper.addCustomLayers(style, context);
+
+                            mapView.setMapboxMap(mapboxMap);
+
+                            RevealMapHelper.addBaseLayers(mapView, style, context);
                         }
+                    });
 
-                        String baseMapFeatureString = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.base_map_feature_json), context);
+                    mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
-                        if (BuildConfig.DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK) {
-                            RevealMapHelper.addOutOfBoundaryMask(style, operationalAreaFeature,
-                                    com.mapbox.geojson.Feature.fromJson(baseMapFeatureString), context);
+                    mapView.setMapboxMap(mapboxMap);
+                    float bufferRadius = getLocationBuffer() / getPixelsPerDPI(context.getResources());
+                    mapView.setLocationBufferRadius(bufferRadius);
+
+
+                    if (finalSelectedFeature != null || (operationalAreaFeature != null && !finalLocationComponentActive)) {
+                        CameraPosition cameraPosition;
+                        if (finalSelectedFeature != null) {
+                            cameraPosition = mapboxMap.getCameraForGeometry(finalSelectedFeature.geometry());
+                            mapboxMap.setCameraPosition(new CameraPosition.Builder().target(cameraPosition.target).zoom(19.1).build());
+
+                        } else {
+                            cameraPosition = mapboxMap.getCameraForGeometry(operationalAreaFeature.geometry());
+                            mapboxMap.setCameraPosition(cameraPosition);
                         }
-
-                        RevealMapHelper.addCustomLayers(style, context);
-
-                        mapView.setMapboxMap(mapboxMap);
-
-                        RevealMapHelper.addBaseLayers(mapView, style, context);
-                    }
-                });
-
-                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
-
-                mapView.setMapboxMap(mapboxMap);
-                float bufferRadius = getLocationBuffer() / getPixelsPerDPI(context.getResources());
-                mapView.setLocationBufferRadius(bufferRadius);
-
-
-                if (finalSelectedFeature != null || (operationalAreaFeature != null && !finalLocationComponentActive)) {
-                    CameraPosition cameraPosition;
-                    if (finalSelectedFeature != null) {
-                        cameraPosition = mapboxMap.getCameraForGeometry(finalSelectedFeature.geometry());
-                        mapboxMap.setCameraPosition(new CameraPosition.Builder().target(cameraPosition.target).zoom(19.1).build());
-
                     } else {
-                        cameraPosition = mapboxMap.getCameraForGeometry(operationalAreaFeature.geometry());
-                        mapboxMap.setCameraPosition(cameraPosition);
-                    }
-                } else {
-                    mapView.focusOnUserLocation(true, bufferRadius, RenderMode.COMPASS);
-                }
-
-
-                writeValues(formFragment, stepName, getCenterPointFeature(mapboxMap.getCameraPosition()),
-                        key, openMrsEntityParent, openMrsEntity, openMrsEntityId,
-                        mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
-
-                mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
-                    @Override
-                    public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
+                        mapView.focusOnUserLocation(true, bufferRadius, RenderMode.COMPASS);
                     }
 
-                    @Override
-                    public void onMove(@NonNull MoveGestureDetector detector) {//do nothing
-                    }
 
-                    @Override
-                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {
-                        Timber.d("onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
-                        writeValues(formFragment, stepName, getCenterPointFeature(mapboxMap.getCameraPosition()), key,
-                                openMrsEntityParent, openMrsEntity, openMrsEntityId,
-                                mapboxMap.getCameraPosition().zoom,
-                                mapHelper.isMyLocationComponentActive(context, myLocationButton));
-                    }
-                });
-            }
-        });
+                    writeValues(formFragment, stepName, getCenterPointFeature(mapboxMap.getCameraPosition()),
+                            key, openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                            mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
 
-        JSONArray canvasIdsArray = new JSONArray();
-        canvasIdsArray.put(canvasId);
-        mapView.setTag(com.vijay.jsonwizard.R.id.canvas_ids, canvasIdsArray.toString());
-        mapView.setTag(com.vijay.jsonwizard.R.id.address, stepName + ":" + jsonObject.getString(JsonFormConstants.KEY));
-        mapView.setTag(com.vijay.jsonwizard.R.id.key, jsonObject.getString(JsonFormConstants.KEY));
-        mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent, openMrsEntityParent);
-        mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity, openMrsEntity);
-        mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_id, openMrsEntityId);
-        mapView.setTag(com.vijay.jsonwizard.R.id.type, jsonObject.getString(JsonFormConstants.TYPE));
-        mapView.setTag(com.vijay.jsonwizard.R.id.step_title, stepName);
-        if (relevance != null) {
-            mapView.setTag(com.vijay.jsonwizard.R.id.relevance, relevance);
-            ((JsonApi) context).addSkipLogicView(mapView);
-        }
-
-        ((JsonApi) context).addFormDataView(mapView);
-
-        if (autoSizeGeoWidget) {
-            mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
-        } else {
-            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-            int mapViewHeight = displayMetrics.heightPixels / 2;
-
-            mapView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mapViewHeight));
-        }
-
-
-        addMaximumZoomLevel(jsonObject, mapView);
-        addGeoFencingValidator(context);
-        LocationRepository locationRepository = RevealApplication.getInstance().getLocationRepository();
-        RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
-            String parentId = locationRepository.getLocationById(operationalAreaFeature.id()).getProperties().getParentId();
-            for (Location location : locationRepository.getAllLocations()) {
-                if (!location.getId().equals(operationalAreaFeature.id())) {
-                    com.mapbox.geojson.Feature feature = convertFromLocation(location);
-                    if (feature != null) {
-                        if (location.getProperties().getParentId().equals(parentId) && location.getProperties().getName().toLowerCase().contains(OTHER)) {
-                            geoFencingValidator.setOtherOperationalArea(feature);
+                    mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
+                        @Override
+                        public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
                         }
-                        geoFencingValidator.getOperationalAreas().add(feature);
 
-                    }
-                }
-            }
-            RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
-                for (com.mapbox.geojson.Feature feature : geoFencingValidator.getOperationalAreas()) {
-                    createBoundaryLayer(feature, context);
+                        @Override
+                        public void onMove(@NonNull MoveGestureDetector detector) {//do nothing
+                        }
+
+                        @Override
+                        public void onMoveEnd(@NonNull MoveGestureDetector detector) {
+                            Timber.d("onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
+                            writeValues(formFragment, stepName, getCenterPointFeature(mapboxMap.getCameraPosition()), key,
+                                    openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                                    mapboxMap.getCameraPosition().zoom,
+                                    mapHelper.isMyLocationComponentActive(context, myLocationButton));
+                        }
+                    });
                 }
             });
-        });
-        views.add(mapView);
-        mapView.onStart();
-        mapView.showCurrentLocationBtn(true);
-        mapView.enableAddPoint(true);
-        disableParentScroll((Activity) context, mapView);
-        return views;
+
+            JSONArray canvasIdsArray = new JSONArray();
+            canvasIdsArray.put(canvasId);
+            mapView.setTag(com.vijay.jsonwizard.R.id.canvas_ids, canvasIdsArray.toString());
+            mapView.setTag(com.vijay.jsonwizard.R.id.address, stepName + ":" + jsonObject.optString(JsonFormConstants.KEY));
+            mapView.setTag(com.vijay.jsonwizard.R.id.key, jsonObject.optString(JsonFormConstants.KEY));
+            mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent, openMrsEntityParent);
+            mapView.setTag(com.vijay.jsonwizard.R.id.extraPopup, false);
+            mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity, openMrsEntity);
+            mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_id, openMrsEntityId);
+            mapView.setTag(com.vijay.jsonwizard.R.id.type, jsonObject.optString(JsonFormConstants.TYPE));
+            mapView.setTag(com.vijay.jsonwizard.R.id.step_title, stepName);
+            if (relevance != null) {
+                mapView.setTag(com.vijay.jsonwizard.R.id.relevance, relevance);
+                ((JsonApi) context).addSkipLogicView(mapView);
+            }
+
+            ((JsonApi) context).addFormDataView(mapView);
+
+            if (autoSizeGeoWidget) {
+                mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
+            } else {
+                DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+                int mapViewHeight = displayMetrics.heightPixels / 2;
+
+                mapView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mapViewHeight));
+            }
+
+
+            addMaximumZoomLevel(jsonObject, mapView);
+            addGeoFencingValidator(context);
+            LocationRepository locationRepository = RevealApplication.getInstance().getLocationRepository();
+            RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
+                String parentId = locationRepository.getLocationById(operationalAreaFeature.id()).getProperties().getParentId();
+                for (Location location : locationRepository.getAllLocations()) {
+                    if (!location.getId().equals(operationalAreaFeature.id())) {
+                        com.mapbox.geojson.Feature feature = convertFromLocation(location);
+                        if (feature != null) {
+                            if (location.getProperties().getParentId().equals(parentId) && location.getProperties().getName().toLowerCase().contains(OTHER)) {
+                                geoFencingValidator.setOtherOperationalArea(feature);
+                            }
+                            geoFencingValidator.getOperationalAreas().add(feature);
+
+                        }
+                    }
+                }
+                RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
+                    for (com.mapbox.geojson.Feature feature : geoFencingValidator.getOperationalAreas()) {
+                        createBoundaryLayer(feature, context);
+                    }
+                });
+            });
+            mapView.onStart();
+            mapView.showCurrentLocationBtn(true);
+            mapView.enableAddPoint(true);
+            disableParentScroll((Activity) context, mapView);
+            return mapView;
+        };
+
+        FutureTask<RevealMapView> task = new FutureTask<>(mapViewCallable);
+        //((AppCompatActivity)context).runOnUiThread(task);
+        RevealApplication.getInstance().getAppExecutors().mainThread().execute(task);
+        RevealMapView result = task.get();
+        Timber.i("Map that has been added=========================%s", result);
+        return Collections.singletonList(result);
+
     }
+
 
     private com.mapbox.geojson.Feature convertFromLocation(PhysicalLocation location) {
         try {

@@ -100,13 +100,14 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         intent.putExtra("json", json);
         jsonFormActivity = Robolectric.buildActivity(RevealJsonFormActivity.class, intent).create().resume().get();
         formFragment = RevealJsonFormFragment.getFormFragment("step1");
-        jsonFormActivity.getSupportFragmentManager().beginTransaction().add(formFragment, null).commit();
+        jsonFormActivity.getSupportFragmentManager().beginTransaction()
+                .add(formFragment, null)
+                .commitNow();
         presenter = formFragment.getPresenter();
         when(imageButton.getDrawable()).thenReturn(context.getDrawable(R.drawable.ic_cross_hair_blue));
         when(mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon)).thenReturn(imageButton);
         CameraPosition cameraPosition = new CameraPosition.Builder().zoom(20).target(new LatLng()).build();
         when(mapView.getCameraPosition()).thenReturn(cameraPosition);
-
     }
 
 
@@ -324,11 +325,11 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public  void testGetLocationUtils() {
+    public void testGetLocationUtils() {
         setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
         LocationUtils mockLocationUtils = mock(LocationUtils.class);
         presenter = spy(presenter);
-        Whitebox.setInternalState(presenter, "locationUtils" , mockLocationUtils);
+        Whitebox.setInternalState(presenter, "locationUtils", mockLocationUtils);
         assertEquals(mockLocationUtils, presenter.getLocationUtils());
     }
 
@@ -337,7 +338,7 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
         android.location.Location mockLocation = mock(android.location.Location.class);
         presenter = spy(presenter);
-        Whitebox.setInternalState(presenter, "lastLocation" , mockLocation);
+        Whitebox.setInternalState(presenter, "lastLocation", mockLocation);
         assertEquals(mockLocation, presenter.getLastLocation());
     }
 
@@ -346,7 +347,7 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
         BaseLocationListener mockLocationListener = mock(BaseLocationListener.class);
         presenter = spy(presenter);
-        Whitebox.setInternalState(presenter, "locationListener" , mockLocationListener);
+        Whitebox.setInternalState(presenter, "locationListener", mockLocationListener);
         assertEquals(mockLocationListener, presenter.getLocationListener());
     }
 
