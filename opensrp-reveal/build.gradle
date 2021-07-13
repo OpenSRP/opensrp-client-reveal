@@ -20,24 +20,6 @@ allprojects {
     repositories {
         maven { url 'https://maven.google.com' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-        maven {
-            def githubProperties = new Properties()
-            if (rootProject.file("github.properties").exists()) {
-                githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
-            }
-
-            name = "GitHubPackages"
-            /*  Configure path to the library hosted on GitHub Package Registry
-             *  Replace UserID with package owner userID and REPOSITORY with the repository name
-             *  e.g. ""https://maven.pkg.github.com/opensrp/opensrp-client-reporting""
-             */
-            url = uri("https://maven.pkg.github.com/onaio/kujaku")
-            credentials {
-                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
-                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
-            }
-
-        }
         maven { url 'https://maven.fabric.io/public' }
         mavenLocal()
     }
