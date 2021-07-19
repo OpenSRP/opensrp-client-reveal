@@ -13,11 +13,14 @@ buildscript {
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
         // Add the dependency for the Performance Monitoring plugin
         classpath 'com.google.firebase:perf-plugin:1.3.4'  // Performance Monitoring plugin
+
+        classpath 'org.smartregister:gradle-jarjar-plugin:1.0.0-SNAPSHOT'
     }
 }
 
 allprojects {
     repositories {
+        maven { url "https://raw.github.com/opensrp/opensrp-client-reveal/rvl-custom-mvn-repo" }
         maven { url 'https://maven.google.com' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven {
@@ -51,6 +54,8 @@ apply plugin: 'com.google.firebase.crashlytics'
 // Apply the Performance Monitoring plugin
 apply plugin: 'com.google.firebase.firebase-perf'
 
+apply plugin: 'org.smartregister.gradle.jarjar'
+
 jacoco {
     toolVersion = "0.8.6"
 }
@@ -71,7 +76,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 34
-        versionName "5.3.26"
+        versionName "6.0.0-RC5"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -83,6 +88,7 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [eventBusIndex: 'org.smartregister.reveal.RevelEventBusIndex']
+                includeCompileClasspath = true
             }
         }
 
@@ -151,7 +157,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "long", "SYNC_INTERVAL_IN_MINUTES", '480'
-            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.ZAMBIA"
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.REFAPP"
             buildConfigField "long", "PULL_UNIQUE_IDS_MINUTES", '15'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
@@ -232,10 +238,11 @@ dependencies {
         exclude group: 'com.github.ybq', module: 'Android-SpinKit'
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.android.gms', module: 'play-services-vision'
-        exclude group: 'com.ibm.fhir', module:'fhir-model'
+        exclude group: 'com.ibm.fhir', module: 'fhir-model'
+        exclude group: 'com.github.stephenc.jcip', module: 'jcip-annotations'
     }
 
-    testImplementation 'com.ibm.fhir:fhir-model:4.7.0'
+    jarJar 'com.ibm.fhir:fhir-model:4.2.3'
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
@@ -285,8 +292,13 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
+    // Repackaged jars will be placed here, adding them to classpath
+    implementation fileTree(dir: "./build/libs", include: ['*.jar'])
+
+
     testImplementation 'junit:junit:4.13'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '2.2'
+
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation('com.squareup:fest-android:1.0.8') { exclude module: 'support-v4' }
     // Import the BoM for the Firebase platform
@@ -343,4 +355,11 @@ task javadoc(type: Javadoc) {
     source = files([mainSrc])
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile
+}
+
+
+jarJar {
+
+    // Dependencies and related JarJar rules
+    remove = ['fhir-model-4.2.3.jar': 'com.ibm.fhir.model.visitor.CopyingVisitor*']
 }

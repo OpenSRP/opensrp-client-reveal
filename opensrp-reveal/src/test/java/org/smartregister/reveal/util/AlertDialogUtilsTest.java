@@ -1,8 +1,9 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;

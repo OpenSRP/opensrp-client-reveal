@@ -3,12 +3,13 @@
 configure(allprojects) { project ->
     buildscript {
         repositories {
-            mavenLocal()
             google()
             jcenter()
             mavenCentral()
+            maven { url "https://raw.github.com/opensrp/opensrp-client-reveal/rvl-custom-mvn-repo" }
             maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-            maven{  url "https://plugins.gradle.org/m2/" }
+            maven { url "https://plugins.gradle.org/m2/" }
+            mavenLocal()
         }
         dependencies {
             classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.2'

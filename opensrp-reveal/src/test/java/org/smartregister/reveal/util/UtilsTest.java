@@ -15,7 +15,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.domain.Action;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -26,10 +28,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -41,6 +46,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_ADD_
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_DISTANCE_SCALE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALIDATE_FAR_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -307,6 +313,30 @@ public class UtilsTest {
         globalConfigs.put(Constants.CONFIGURATION.SYNC_INTERVAL_IN_MINUTES, "80");
         when(revealApplication.getServerConfigs()).thenReturn(globalConfigs);
         assertEquals(Utils.getSyncInterval(), 80);
+    }
+
+    @Test
+    public void testGetDefinitionUri() {
+        PlanDefinition mockDefinition = mock(PlanDefinition.class);
+        Action action = mock(Action.class);
+        List<Action> actions = Collections.singletonList(action);
+        when(mockDefinition.getActions()).thenReturn(actions);
+        when(action.getCode()).thenReturn(BCC);
+        when(action.getDefinitionUri()).thenReturn("BCC.json");
+        String result = Utils.getDefinitionUri(mockDefinition, BCC);
+        assertEquals("BCC", result);
+    }
+
+    @Test
+    public void testGetDefinitionUriNotFound() {
+        PlanDefinition mockDefinition = mock(PlanDefinition.class);
+        Action action = mock(Action.class);
+        List<Action> actions = Collections.singletonList(action);
+        when(mockDefinition.getActions()).thenReturn(actions);
+        when(action.getCode()).thenReturn(BCC);
+        when(action.getDefinitionUri()).thenReturn("BCC.json");
+        String result = Utils.getDefinitionUri(mockDefinition, BEDNET_DISTRIBUTION);
+        assertNull(result);
     }
 
     @Test

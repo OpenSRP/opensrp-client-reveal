@@ -2,8 +2,9 @@ package org.smartregister.reveal.contract;
 
 import android.content.Context;
 
-import org.smartregister.domain.Task;
 import org.smartregister.domain.Event;
+import org.smartregister.domain.Task;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
@@ -73,5 +74,7 @@ public interface StructureTasksContract {
         void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
 
         void displayResetTaskInfoDialog(StructureTaskDetails taskDetails);
+
+        void registerFamily(BaseTaskDetails taskDetails);
     }
 }

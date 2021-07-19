@@ -1,15 +1,17 @@
 package org.smartregister.reveal.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.StructureTaskDetails;
+import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.viewholder.StructureTaskViewHolder;
 
@@ -63,6 +65,20 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
                 action = context.getString(R.string.adhere_mda);
             } else if (Intervention.MDA_DISPENSE.equals(taskDetails.getTaskCode())) {
                 action = context.getString(R.string.dispense_mda);
+            } else if (Intervention.MOSQUITO_COLLECTION.equals(taskDetails.getTaskCode())) {
+                name = context.getString(R.string.mosquito_collection_point);
+                action = context.getString(R.string.record_mosquito_collection);
+            } else if (Intervention.LARVAL_DIPPING.equals(taskDetails.getTaskCode())) {
+                name = context.getString(R.string.larval_breeding_site);
+                action = context.getString(R.string.record_larvacide);
+            } else if (Intervention.BCC.equals(taskDetails.getTaskCode())) {
+                name = context.getString(R.string.bcc);
+                action = context.getString(R.string.record_bcc);
+            }  else if (Intervention.PAOT.equals(taskDetails.getTaskCode())) {
+                name = context.getString(R.string.card_view_paot);
+                if (taskDetails.getBusinessStatus() != null) {
+                    action = CardDetailsUtil.getTranslatedBusinessStatus(taskDetails.getBusinessStatus()).replaceAll(" ", "\n");
+                }
             }
             taskDetails.setTaskName(name);
             taskDetails.setTaskAction(action);

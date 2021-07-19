@@ -71,28 +71,29 @@ public class GeoJsonUtils {
             }
             for (Task task : taskSet) {
                 calculateState(task, state, mdaStatusMap);
+                if (!state.familyRegTaskExists || state.familyRegistered || task.getCode().equals(REGISTER_FAMILY)) {
+                    taskProperties = new HashMap<>();
+                    taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
+                    if ((BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL)
+                            && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
+                        taskProperties.put(TASK_BUSINESS_STATUS, SPRAYED);
+                    } else {
+                        taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                    }
+                    taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus()); // used to determine action to take when a feature is selected
+                    taskProperties.put(TASK_STATUS, task.getStatus().name());
+                    taskProperties.put(TASK_CODE, task.getCode());
 
-                taskProperties = new HashMap<>();
-                taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                if ((BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL)
-                        && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
-                    taskProperties.put(TASK_BUSINESS_STATUS, SPRAYED);
-                } else {
-                    taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                    if (indexCase != null && structure.getId().equals(indexCase)) {
+                        taskProperties.put(IS_INDEX_CASE, Boolean.TRUE.toString());
+                    } else {
+                        taskProperties.put(IS_INDEX_CASE, Boolean.FALSE.toString());
+                    }
+
+                    taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
+                    taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
+                    taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                 }
-                taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus()); // used to determine action to take when a feature is selected
-                taskProperties.put(TASK_STATUS, task.getStatus().name());
-                taskProperties.put(TASK_CODE, task.getCode());
-
-                if (indexCase != null && structure.getId().equals(indexCase)) {
-                    taskProperties.put(IS_INDEX_CASE, Boolean.TRUE.toString());
-                } else {
-                    taskProperties.put(IS_INDEX_CASE, Boolean.FALSE.toString());
-                }
-
-                taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
-                taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
-                taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                 interventionList.append(task.getCode());
                 interventionList.append("~");
 

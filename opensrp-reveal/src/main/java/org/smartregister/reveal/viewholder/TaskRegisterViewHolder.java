@@ -97,7 +97,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
         boolean hasSingleGroupedTask = (BEDNET_DISTRIBUTION.equals(task.getTaskCode()) || BLOOD_SCREENING.equals(task.getTaskCode())) && task.getTaskCount() == 1;
         // registered family with multiple tasks
-        if (cardDetails != null && task.getTaskCount() != null // task grouping only for FI
+        if (cardDetails != null && task.hasRegisteredFamily() && task.getTaskCount() != null // task grouping only for FI
                 && !(REGISTER_FAMILY.equals(task.getTaskCode()) && Task.TaskStatus.READY.name().equals(task.getTaskStatus()))) { //skip if we have a READY family reg task
             if (task.getTaskCount() > 1 || hasSingleGroupedTask) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
@@ -113,8 +113,14 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
             }
 
         } else if (cardDetails != null && cardDetails.getStatusColor() != null) {
-            actionView.setBackground(null);
-            actionView.setTextColor(context.getResources().getColor(cardDetails.getStatusColor()));
+            if (task.getTaskCount() != null && task.getPendingTasksCount() > 1) {
+                actionView.setText(R.string.view_tasks);
+                actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
+            } else {
+                actionView.setBackground(null);
+                actionView.setTextColor(context.getResources().getColor(cardDetails.getStatusColor()));
+            }
         } else {
             actionView.setBackground(context.getResources().getDrawable(R.drawable.task_action_bg));
             actionView.setTextColor(context.getResources().getColor(R.color.text_black));

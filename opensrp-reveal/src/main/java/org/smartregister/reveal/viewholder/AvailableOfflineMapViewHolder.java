@@ -1,7 +1,8 @@
 package org.smartregister.reveal.viewholder;
 
-import androidx.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 public class AvailableOfflineMapViewHolder extends BaseOfflineMapViewHolder {
 

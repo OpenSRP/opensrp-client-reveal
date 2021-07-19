@@ -71,7 +71,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
         if ((BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && !Utils.isZambiaIRSLite()) || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
             indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails));
-        } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+        } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
             Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
             indicatorDetails = IndicatorUtils.getNamibiaIndicators(operationalArea.getId(), prefsUtil.getCurrentPlanId(), sqLiteDatabase);
             indicatorDetails.setTarget(calculateTarget());
@@ -128,7 +128,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
             progressIndicator3.setProgress(progress3);
             progressIndicator3.setTitle(this.activity.getString(R.string.n_percent, progress3));
-        } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+        } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
 
             progressIndicator3.setSubTitle(activity.getString(R.string.target_coverage));
             int targetCoverage = indicatorDetails.getTarget() == 0 ? 100 : (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getTarget());

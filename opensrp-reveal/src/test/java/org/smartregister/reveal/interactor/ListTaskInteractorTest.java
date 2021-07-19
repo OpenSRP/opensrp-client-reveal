@@ -376,7 +376,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
         when(structureRepository.getLocationById(anyString())).thenReturn(location);
         Feature feature = TestingUtils.getStructure();
-        feature.addStringProperty(TASK_IDENTIFIER,"task-id-a");
+        feature.addStringProperty(TASK_IDENTIFIER, "task-id-a");
 
         listTaskInteractor.markStructureAsInactive(feature);
 

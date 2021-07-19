@@ -1,27 +1,31 @@
 package org.smartregister.reveal.interactor;
 
-import android.content.Context;
+import android.content.IntentFilter;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.common.reflect.TypeToken;
 
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.domain.FamilyEventClient;
+import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
+import org.smartregister.reveal.receiver.TaskGenerationReceiver;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.TaskUtils;
-import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 
-import java.util.HashSet;
+import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Set;
+
+import static org.smartregister.AllConstants.INTENT_KEY.TASK_GENERATED_EVENT;
 
 /**
  * Created by samuelgithengi on 4/15/19.
  */
 public class RevealFamilyRegisterInteractor extends org.smartregister.family.interactor.FamilyRegisterInteractor implements FamilyRegisterContract.Interactor {
 
-    private TaskUtils taskUtils;
 
     private AppExecutors appExecutors;
 
@@ -31,7 +35,6 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
 
     public RevealFamilyRegisterInteractor(FamilyRegisterContract.Presenter presenter) {
         this.presenter = presenter;
-        taskUtils = TaskUtils.getInstance();
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
     }
@@ -42,29 +45,14 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
     }
 
     @Override
-    public void generateTasks(List<FamilyEventClient> eventClientList, String structureId, Context context) {
-        appExecutors.diskIO().execute(() -> {
-            Set<String> generatedIds = new HashSet<>();
-            for (FamilyEventClient eventClient : eventClientList) {
-                if (eventClient.getClient().getLastName().equals("Family"))
-                    continue;
-                String entityId = eventClient.getClient().getBaseEntityId();
-                if (!generatedIds.contains(entityId)) {
-                    generatedIds.add(entityId);
-                    if (Utils.isFocusInvestigation())
-                        taskUtils.generateBloodScreeningTask(context, entityId, structureId);
-                    else if (Utils.isMDA())
-                        taskUtils.generateMDADispenseTask(context, entityId, structureId);
-                }
-            }
-            if (Utils.isFocusInvestigation())
-                taskUtils.generateBedNetDistributionTask(context, structureId);
-            appExecutors.mainThread().execute(() -> presenter.onTasksGenerated(eventClientList));
-        });
-    }
-
-    @Override
     protected void processClient(List<EventClient> eventClientList) {
+        IntentFilter filter = new IntentFilter(TASK_GENERATED_EVENT);
+        TaskGenerationReceiver taskGenerationReceiver = new TaskGenerationReceiver(task -> {
+            Type type = new TypeToken<List<FamilyEventClient>>() {
+            }.getType();
+            appExecutors.mainThread().execute(() -> presenter.onTasksGenerated(JsonFormUtils.gson.fromJson(JsonFormUtils.gson.toJson(eventClientList), type)));
+        });
+        LocalBroadcastManager.getInstance(RevealApplication.getInstance().getApplicationContext()).registerReceiver(taskGenerationReceiver, filter);
         clientProcessor.processClient(eventClientList, true);
     }
 }

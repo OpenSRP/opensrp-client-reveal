@@ -2,10 +2,11 @@ package org.smartregister.reveal.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.viewpager.widget.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.viewpager.widget.ViewPager;
 
 import org.smartregister.domain.Task;
 import org.smartregister.family.activity.BaseFamilyProfileActivity;

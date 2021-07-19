@@ -161,6 +161,77 @@ public class StructureTaskAdapterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnBindViewHolderMDAAdherence() {
+        String structureName = "William residence";
+        StructureTaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.MDA_ADHERENCE);
+        task.setTaskName(structureName);
+        LinearLayout vg = new LinearLayout(context);
+        StructureTaskViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+                adapter.setTaskDetailsList(taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals(structureName, ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
+    public void testOnBindViewHolderMDADispense() {
+        String structureName = "William residence";
+        StructureTaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.MDA_DISPENSE);
+        task.setTaskName(structureName);
+        LinearLayout vg = new LinearLayout(context);
+        StructureTaskViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+                adapter.setTaskDetailsList(taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals(structureName, ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
+    public void testOnBindViewHolderMosquitoCollection() {
+        StructureTaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.MOSQUITO_COLLECTION);
+        LinearLayout vg = new LinearLayout(context);
+        StructureTaskViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+                adapter.setTaskDetailsList(taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals("Mosquito collection point", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
+    public void testOnBindViewHolderLaravalDipping() {
+        StructureTaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.LARVAL_DIPPING);
+        LinearLayout vg = new LinearLayout(context);
+        StructureTaskViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+                adapter.setTaskDetailsList(taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals("Larval breeding site", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
+    public void testOnBindViewHolderBCC() {
+        StructureTaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.BCC);
+        LinearLayout vg = new LinearLayout(context);
+        StructureTaskViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+                adapter.setTaskDetailsList(taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals("Behaviour Change communication", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+
+    @Test
+    public void testOnBindViewHolderPAOT() {
+        StructureTaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.PAOT);
+        LinearLayout vg = new LinearLayout(context);
+        StructureTaskViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+                adapter.setTaskDetailsList(taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals("Potential Area of Transmission", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
     public void testUpdateTasks() {
 
         adapter.setTaskDetailsList(taskDetailsList);

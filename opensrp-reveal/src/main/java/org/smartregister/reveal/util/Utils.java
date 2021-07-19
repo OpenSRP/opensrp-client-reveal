@@ -33,8 +33,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.domain.Action;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.DocumentConfigurationServiceJob;
@@ -72,6 +74,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_K
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_FI;
 import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -88,6 +91,8 @@ public class Utils {
     public static final String REVEAL_PROJECT = "reveal";
 
     private static Cache<Location> cache = new Cache<>();
+
+    private static Cache<PlanDefinition> planCache = new Cache<>();
 
     static {
         ALLOWED_LEVELS = new ArrayList<>();
@@ -146,6 +151,19 @@ public class Utils {
                 return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
             }
         });
+    }
+
+    public static PlanDefinition getPlanByIdentifier(String planIdentifier) {
+        return planCache.get(planIdentifier, () -> RevealApplication.getInstance().getPlanDefinitionRepository().findPlanDefinitionById(planIdentifier));
+    }
+
+    public static String getDefinitionUri(@NonNull PlanDefinition planDefinition, @NonNull String intervention) {
+        for (Action action : planDefinition.getActions()) {
+            if (action.getCode().equals(intervention)) {
+                return StringUtils.replace(action.getDefinitionUri(), ".json", "");
+            }
+        }
+        return null;
     }
 
     public static Location getLocationById(String locationId) {
@@ -218,7 +236,7 @@ public class Utils {
             return R.string.focus_investigation;
         else if (interventionType.equals(IRS) || interventionType.equals(DYNAMIC_IRS))
             return R.string.irs;
-        else if (interventionType.equals(MDA) || interventionType.equals(MDA))
+        else if (interventionType.equals(MDA) || interventionType.equals(DYNAMIC_MDA))
             return R.string.mda;
         else
             return R.string.irs;

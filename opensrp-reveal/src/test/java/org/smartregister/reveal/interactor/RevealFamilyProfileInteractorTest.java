@@ -1,6 +1,9 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+import android.content.Intent;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -33,8 +36,6 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.InteractorUtils;
-import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.sync.ClientProcessorForJava;
 
@@ -48,7 +49,6 @@ import java.util.concurrent.Executors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.timeout;
@@ -66,9 +66,6 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
     @Mock
     private FamilyProfileContract.Presenter presenter;
-
-    @Mock
-    private TaskUtils taskUtils;
 
     @Mock
     private CommonRepository commonRepository;
@@ -102,7 +99,6 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     public void setUp() {
         org.smartregister.Context.bindtypes = new ArrayList<>();
         interactor = new RevealFamilyProfileInteractor(presenter);
-        Whitebox.setInternalState(interactor, "taskUtils", taskUtils);
         AppExecutors appExecutors = new AppExecutors(Executors.newSingleThreadExecutor(),
                 Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor());
         Whitebox.setInternalState(interactor, "appExecutors", appExecutors);
@@ -120,19 +116,6 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         assertNotNull(clientProcessor);
         assertTrue(clientProcessor instanceof RevealClientProcessor);
     }
-
-    @Test
-    public void testGenerateTasks() {
-        String baseEntityId = UUID.randomUUID().toString();
-        String structureId = UUID.randomUUID().toString();
-        String plan = UUID.randomUUID().toString();
-        PreferencesUtil.getInstance().setCurrentPlan(plan);
-        PreferencesUtil.getInstance().setInterventionTypeForPlan(plan, "FI");
-        interactor.generateTasks(context, baseEntityId, structureId);
-        verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateBloodScreeningTask(context, baseEntityId, structureId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated();
-    }
-
 
     @Test
     public void testUpdateFamilyMemberSurnameWithoutFamilyMembers() {
@@ -215,7 +198,6 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         when(commonRepository.findSearchIds(anyString())).thenReturn(familyMembers);
 
         Task task = TestingUtils.getTask(structureId);
-        when(taskUtils.generateRegisterFamilyTask(any(), any())).thenReturn(task);
         interactor.archiveFamily(familyId, structureId);
 
         for (String familyMember : new ArrayList<>(familyMembers))
@@ -224,7 +206,9 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).archiveTasksForEntity(structureId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksForEntity(structureId);
-        verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateRegisterFamilyTask(any(), eq(structureId));
+        Intent taskGeneratedIntent = new Intent("task_generated_event");
+        taskGeneratedIntent.putExtra("task_generated", task);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(taskGeneratedIntent);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(true, task);
 
     }

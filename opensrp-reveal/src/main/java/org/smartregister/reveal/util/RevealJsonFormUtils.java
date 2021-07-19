@@ -18,6 +18,7 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
@@ -241,9 +242,23 @@ public class RevealJsonFormUtils {
     }
 
     public String getFormName(String encounterType, String taskCode) {
+        if (taskCode != null) {
+            PlanDefinition planDefinition = Utils.getPlanByIdentifier(PreferencesUtil.getInstance().getCurrentPlanId());
+            if (planDefinition != null) {
+                String formattedFormName = Utils.getDefinitionUri(planDefinition, taskCode);
+                FormUtils formUtils = new FormUtils();
+                try {
+                    if (formattedFormName != null && formUtils.getFormJsonFromRepositoryOrAssets(RevealApplication.getInstance().getApplicationContext(), formattedFormName) != null) {
+                        return formattedFormName;
+                    }
+                } catch (JSONException e) {
+                    Timber.e(e, "Error getting form from plan");
+                }
+            }
+        }
         String formName = null;
         if (SPRAY_EVENT.equals(encounterType) || Intervention.IRS.equals(taskCode)) {
-            if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+            if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.SPRAY_FORM_NAMIBIA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
                 formName = JsonForm.SPRAY_FORM_BOTSWANA;
@@ -251,8 +266,6 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.SPRAY_FORM_ZAMBIA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_SPRAY_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
-                formName = JsonForm.SPRAY_FORM_REFAPP;
             } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
                 formName = JsonForm.SPRAY_FORM_SENEGAL;
             } else {
@@ -262,10 +275,8 @@ public class RevealJsonFormUtils {
                 || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.THAILAND_EN_MOSQUITO_COLLECTION_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
-                formName = JsonForm.REFAPP_MOSQUITO_COLLECTION_FORM;
             } else {
                 formName = JsonForm.MOSQUITO_COLLECTION_FORM;
             }
@@ -273,10 +284,8 @@ public class RevealJsonFormUtils {
                 || Intervention.BEDNET_DISTRIBUTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BEDNET_DISTRIBUTION_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.THAILAND_EN_BEDNET_DISTRIBUTION_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
-                formName = JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM;
             } else {
                 formName = JsonForm.BEDNET_DISTRIBUTION_FORM;
             }
@@ -284,8 +293,6 @@ public class RevealJsonFormUtils {
                 || Intervention.CASE_CONFIRMATION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_CASE_CONFIRMATION_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
-                formName = JsonForm.REFAPP_CASE_CONFIRMATION_FORM;
             } else {
                 formName = JsonForm.CASE_CONFIRMATION_FORM;
             }
@@ -293,20 +300,16 @@ public class RevealJsonFormUtils {
                 || Intervention.BLOOD_SCREENING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BLOOD_SCREENING_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.THAILAND_EN_BLOOD_SCREENING_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
-                formName = JsonForm.REFAPP_BLOOD_SCREENING_FORM;
             } else {
                 formName = JsonForm.BLOOD_SCREENING_FORM;
             }
         } else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.THAILAND_EN_LARVAL_DIPPING_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
-                formName = JsonForm.REFAPP_LARVAL_DIPPING_FORM;
             } else {
                 formName = JsonForm.LARVAL_DIPPING_FORM;
             }
@@ -327,8 +330,6 @@ public class RevealJsonFormUtils {
         } else if (Constants.EventType.PAOT_EVENT.equals(encounterType) || Intervention.PAOT.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_PAOT_FORM;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
-                formName = JsonForm.REFAPP_PAOT_FORM;
             } else {
                 formName = JsonForm.PAOT_FORM;
             }
@@ -409,7 +410,8 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public void populateField(JSONObject formJson, String key, String value, String fieldToPopulate) throws JSONException {
+    public void populateField(JSONObject formJson, String key, String value, String
+            fieldToPopulate) throws JSONException {
         JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.getMultiStepFormFields(formJson), key);
         if (field != null) {
             field.put(fieldToPopulate, value);
@@ -536,7 +538,9 @@ public class RevealJsonFormUtils {
         return null;
     }
 
-    public static org.smartregister.clientandeventmodel.Event createTaskEvent(String baseEntityId, String locationId, Map<String, String> details, String eventType, String entityType) {
+    public static org.smartregister.clientandeventmodel.Event createTaskEvent(String
+                                                                                      baseEntityId, String locationId, Map<String, String> details, String eventType, String
+                                                                                      entityType) {
         org.smartregister.clientandeventmodel.Event taskEvent = (org.smartregister.clientandeventmodel.Event) new org.smartregister.clientandeventmodel.Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(eventType)
                 .withLocationId(locationId).withEntityType(entityType).withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
         return taskEvent;
@@ -666,7 +670,8 @@ public class RevealJsonFormUtils {
         }
     }
 
-    private void populateUserAssignedLocations(JSONObject formJSON, String fieldKey, List<String> allowedTags) {
+    private void populateUserAssignedLocations(JSONObject formJSON, String
+            fieldKey, List<String> allowedTags) {
         JSONArray options = new JSONArray();
         List<String> defaultLocationHierarchy = locationHelper.generateDefaultLocationHierarchy(allowedTags);
         if (defaultLocationHierarchy == null) {

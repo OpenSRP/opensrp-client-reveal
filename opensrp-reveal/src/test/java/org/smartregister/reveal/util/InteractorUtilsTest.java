@@ -24,7 +24,6 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.model.BaseTaskDetails;
-import org.smartregister.reveal.sync.RevealClientProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,14 +60,11 @@ public class InteractorUtilsTest extends BaseUnitTest {
     private EventClientRepository eventClientRepository;
 
     @Mock
-    private RevealClientProcessor clientProcessor;
-
-    @Mock
     private RevealJsonFormUtils jsonFormUtils;
 
     @Mock
     private SQLiteDatabase database;
-    
+
     @Mock
     private CommonRepository commonRepository;
 
@@ -96,7 +92,7 @@ public class InteractorUtilsTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
+        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository);
         Whitebox.setInternalState(interactorUtils, "jsonFormUtils", jsonFormUtils);
         formSubmissionId = UUID.randomUUID().toString();
         baseEntityId = UUID.randomUUID().toString();

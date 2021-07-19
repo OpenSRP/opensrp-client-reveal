@@ -169,6 +169,7 @@ public interface Constants {
         String PLAN_IDENTIFIER = "planIdentifier";
         String LOCATION_STATUS = "status";
         String LOCATION_NAME = "name";
+        String PLAN_EVALUATION_ENTITY_ID = "plan_evaluation_entity_id";
     }
 
 

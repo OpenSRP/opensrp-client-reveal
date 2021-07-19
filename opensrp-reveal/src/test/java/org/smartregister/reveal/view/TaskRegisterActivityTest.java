@@ -2,8 +2,9 @@ package org.smartregister.reveal.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.fragment.app.Fragment;
 import android.view.View;
+
+import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
 import org.junit.Before;

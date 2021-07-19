@@ -1,8 +1,9 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
+
+import androidx.annotation.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
@@ -78,7 +79,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         this.appExecutors = appExecutors;
         this.database = database;
         this.structureRepository = structureRepository;
-        this.interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
+        this.interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository);
     }
 
     @Override
@@ -198,8 +199,8 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
                 }
 
-                if (Intervention.BLOOD_SCREENING.equals(task.getTaskCode())){
-                    setPersonTested(task,eventTask.getEventsPerTask() > 1);
+                if (Intervention.BLOOD_SCREENING.equals(task.getTaskCode())) {
+                    setPersonTested(task, eventTask.getEventsPerTask() > 1);
                 }
 
             }
@@ -219,22 +220,23 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
     private void setPersonTested(StructureTaskDetails task, boolean isEdit) {
 
-        SQLiteStatement personTestWithEdits = null;
-        SQLiteStatement personTested = null;
+        Cursor personTestWithEdits = null;
+        Cursor personTested = null;
 
         try {
-            if (isEdit){
+            if (isEdit) {
                 String personTestWithEditsSql = "select person_tested from event_task where id in " +
                         "(select formSubmissionId from event where baseEntityId = ? and eventType = ? " +
                         "order by updatedAt desc limit 1)";
-                personTestWithEdits = database.compileStatement(personTestWithEditsSql);
-                personTestWithEdits.bindString(1, task.getTaskEntity());
-                personTestWithEdits.bindString(2, BLOOD_SCREENING_EVENT);
-                task.setPersonTested(personTestWithEdits.simpleQueryForString());
+                personTestWithEdits = database.rawQuery(personTestWithEditsSql, new String[]{task.getTaskEntity(), BLOOD_SCREENING_EVENT});
+                if (personTested.moveToNext()) {
+                    task.setPersonTested(personTested.getString(0));
+                }
             } else {
-                personTested = database.compileStatement("SELECT person_tested FROM event_task WHERE task_id = ?");
-                personTested.bindString(1, task.getTaskId());
-                task.setPersonTested(personTested.simpleQueryForString());
+                personTested = database.rawQuery("SELECT person_tested FROM event_task WHERE task_id = ?", new String[]{task.getTaskId()});
+                if (personTested.moveToNext()) {
+                    task.setPersonTested(personTested.getString(0));
+                }
             }
         } catch (SQLException e) {
             Timber.e(e, "Error querying person tested values ");

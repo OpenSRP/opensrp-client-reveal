@@ -1,10 +1,11 @@
 package org.smartregister.reveal.viewholder;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;

@@ -99,7 +99,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         super(presenter);
         this.locationBuffer = locationBuffer;
         locationRepository = RevealApplication.getInstance().getLocationRepository();
-        interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
+        interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository);
     }
 
     private String mainSelect(String mainCondition) {
@@ -134,8 +134,12 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         queryBuilder.mainCondition(mainCondition);
         queryBuilder.addCondition(String.format(" AND %s.%s IS NULL",
                 FAMILY, STRUCTURE_ID));
-        return queryBuilder.addCondition(String.format(" AND %s.%s != '%s'",
+        queryBuilder.addCondition(String.format(" AND %s.%s != '%s'",
                 tableName, CODE, BEDNET_DISTRIBUTION));
+        return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
+                        "GROUP_CONCAT(%s || \"-\" || %s ) AS %s , 'non_registered' as %s  FROM ( ",
+                GROUPED_TASKS, COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS, FAMILY_MEMBER_NAMES) + queryBuilder +
+                String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
     }
 
     private String groupedRegisteredStructureTasksSelect(String mainCondition) {
@@ -214,7 +218,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
 
 
                 tasks.addAll(queryTaskDetails(nonRegisteredStructureTasksSelect(mainCondition.first),
-                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, false));
+                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, true));
 
             } else {
 

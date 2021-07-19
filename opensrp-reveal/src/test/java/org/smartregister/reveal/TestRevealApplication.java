@@ -7,6 +7,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
+import org.smartregister.SyncConfiguration;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.receiver.ValidateAssignmentReceiver;
@@ -20,6 +21,7 @@ import java.util.concurrent.Executors;
 import io.ona.kujaku.data.realm.RealmDatabase;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 
@@ -31,7 +33,11 @@ public class TestRevealApplication extends RevealApplication {
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
-        CoreLibrary.init(context, new RevealSyncConfiguration());
+
+        SyncConfiguration syncConfiguration = spy(new RevealSyncConfiguration());
+        when(syncConfiguration.runPlanEvaluationOnClientProcessing()).thenReturn(false);
+        CoreLibrary.init(context, syncConfiguration);
+
         ConfigurableViewsLibrary.init(context);
 
         FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);

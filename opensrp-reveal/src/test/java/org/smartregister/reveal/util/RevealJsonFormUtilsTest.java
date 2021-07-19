@@ -335,21 +335,21 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     public void testGetRefAppSprayForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
-        assertEquals(JsonForm.SPRAY_FORM_REFAPP, actualFormName);
+        assertEquals(JsonForm.SPRAY_FORM_NAMIBIA, actualFormName);
     }
 
     @Test
     public void testGetRefAppBloodScreeningForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(BLOOD_SCREENING_EVENT, null);
-        assertEquals(JsonForm.REFAPP_BLOOD_SCREENING_FORM, actualFormName);
+        assertEquals(JsonForm.THAILAND_EN_BLOOD_SCREENING_FORM, actualFormName);
     }
 
     @Test
     public void testGetRefAppLarvalDippingForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null);
-        assertEquals(JsonForm.REFAPP_LARVAL_DIPPING_FORM, actualFormName);
+        assertEquals(JsonForm.THAILAND_EN_LARVAL_DIPPING_FORM, actualFormName);
     }
 
     @Test
@@ -363,7 +363,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     public void testGetRefAppBednetDistributionForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
-        assertEquals(JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM, actualFormName);
+        assertEquals(JsonForm.THAILAND_EN_BEDNET_DISTRIBUTION_FORM, actualFormName);
     }
 
     @Test
@@ -384,7 +384,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     public void testGetRefAppCaseConfirmationForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
-        assertEquals(JsonForm.REFAPP_CASE_CONFIRMATION_FORM, actualFormName);
+        assertEquals(JsonForm.CASE_CONFIRMATION_FORM, actualFormName);
     }
 
 
@@ -476,7 +476,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     public void testGetRefAppPAOTForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(PAOT_EVENT, null);
-        assertEquals(JsonForm.REFAPP_PAOT_FORM, actualFormName);
+        assertEquals(JsonForm.PAOT_FORM, actualFormName);
     }
 
     @Test
@@ -649,7 +649,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null);
-        assertEquals(JsonForm.REFAPP_MOSQUITO_COLLECTION_FORM, actualFormName);
+        assertEquals(JsonForm.THAILAND_EN_MOSQUITO_COLLECTION_FORM, actualFormName);
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 

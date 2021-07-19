@@ -1,8 +1,9 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
-import androidx.core.util.Pair;
+
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 

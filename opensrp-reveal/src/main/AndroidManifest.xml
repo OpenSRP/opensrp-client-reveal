@@ -130,6 +130,9 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".view.StructureTasksActivity"
+            android:screenOrientation="portrait"/>
+
         <service android:name=".sync.LocationTaskIntentService" />
         <service android:name=".sync.RevealSettingsSyncIntentService" />
         <service android:name=".sync.RevealSyncIntentService" />

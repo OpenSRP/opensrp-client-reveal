@@ -1,9 +1,10 @@
 package org.smartregister.reveal.fragment;
 
 import android.content.Context;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.CheckBox;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.junit.Before;
 import org.junit.Rule;

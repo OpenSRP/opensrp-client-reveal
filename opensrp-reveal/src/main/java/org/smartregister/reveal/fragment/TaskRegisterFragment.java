@@ -47,6 +47,7 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.view.FilterTasksActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
+import org.smartregister.reveal.view.StructureTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
 
@@ -277,7 +278,8 @@ public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements 
     public void setTaskDetails(List<TaskDetails> tasks) {
         taskAdapter.setTaskDetails(tasks);
         if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA
-                || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
+                || BuildConfig.BUILD_COUNTRY == Country.SENEGAL
+                || (BuildConfig.BUILD_COUNTRY == Country.REFAPP && R.string.irs == Utils.getInterventionLabel())) {
             new IndicatorsCalculatorTask(getActivity(), tasks).execute();
         }
     }
@@ -379,6 +381,16 @@ public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements 
 
         startActivity(intent);
 
+    }
+
+    @Override
+    public void openTasksScreen(BaseTaskDetails taskDetails) {
+        Intent intent = new Intent(getContext(), StructureTasksActivity.class);
+        intent.putExtra(Properties.LOCATION_UUID, taskDetails.getStructureId());
+        intent.putExtra(Properties.TASK_IDENTIFIER, taskDetails.getTaskId());
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
+        intent.putExtra(Properties.TASK_STATUS, taskDetails.getTaskStatus());
+        startActivity(intent);
     }
 
     @Override

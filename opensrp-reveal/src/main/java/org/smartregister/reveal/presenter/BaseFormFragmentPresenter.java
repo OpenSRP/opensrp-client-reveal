@@ -16,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
@@ -49,7 +48,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
-import static org.smartregister.reveal.util.Country.NAMIBIA;
 
 /**
  * Created by samuelgithengi on 4/18/19.

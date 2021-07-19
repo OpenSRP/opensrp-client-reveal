@@ -11,12 +11,12 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.CoreLibrary;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
-import org.smartregister.domain.Task;
-import org.smartregister.domain.Event;
-import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -27,6 +27,7 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.AppExecutors;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,6 +76,7 @@ public class RevealClientProcessorPowerMockTest {
     @Before
     public void setUp() {
         clientProcessor = spy(Whitebox.newInstance(RevealClientProcessor.class));
+        Whitebox.setInternalState(clientProcessor, "appExecutors", new AppExecutors());
     }
 
     @Test

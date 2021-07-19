@@ -253,7 +253,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         if (taskDetailsList != null && (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA
                 || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA
-                || BuildConfig.BUILD_COUNTRY == Country.SENEGAL)) {
+                || BuildConfig.BUILD_COUNTRY == Country.SENEGAL
+                || (BuildConfig.BUILD_COUNTRY == Country.REFAPP && R.string.irs == org.smartregister.reveal.util.Utils.getInterventionLabel()))) {
             new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
         }
     }
@@ -359,6 +360,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
         else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
+        } else {
+            listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
         }
     }
 
@@ -531,9 +534,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 , formName, feature, sprayStatus, familyHead);
         if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(cardDetails.getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
-        } else if ( cardDetails instanceof MosquitoHarvestCardDetails) {
+        } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             jsonFormUtils.populateForm(event, formJson);
-        } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
+        } else if (cardDetails instanceof SprayCardDetails && (Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY) || Country.REFAPP.equals(BuildConfig.BUILD_COUNTRY))) {
             jsonFormUtils.populateForm(event, formJson);
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName) || JsonForm.SPRAY_FORM_SENEGAL.equals(formName)) {
             try {
@@ -669,7 +672,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void onAddStructureClicked(boolean myLocationComponentActive, String point) {
-        String formName = jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT);
+        String formName = jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT, null);
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
             revealApplication.setFeatureCollection(featureCollection);

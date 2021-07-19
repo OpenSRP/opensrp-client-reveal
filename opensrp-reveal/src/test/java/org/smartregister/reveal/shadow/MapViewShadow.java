@@ -2,9 +2,10 @@ package org.smartregister.reveal.shadow;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.AttributeSet;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.AttributeSet;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;

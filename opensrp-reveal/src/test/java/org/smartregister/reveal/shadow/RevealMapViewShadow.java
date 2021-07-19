@@ -1,9 +1,10 @@
 package org.smartregister.reveal.shadow;
 
 import android.content.Context;
+import android.util.AttributeSet;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.AttributeSet;
 
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;

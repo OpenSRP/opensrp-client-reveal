@@ -1,11 +1,12 @@
 package org.smartregister.reveal.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;

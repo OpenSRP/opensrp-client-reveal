@@ -1,7 +1,5 @@
 package org.smartregister.reveal.contract;
 
-import android.content.Context;
-
 import org.smartregister.family.domain.FamilyEventClient;
 
 import java.util.List;
@@ -19,8 +17,6 @@ public interface FamilyRegisterContract extends org.smartregister.family.contrac
 
 
     interface Interactor extends org.smartregister.family.contract.FamilyRegisterContract.Interactor {
-
-        void generateTasks(List<FamilyEventClient> eventClientList, String structureId, Context context);
     }
 
 

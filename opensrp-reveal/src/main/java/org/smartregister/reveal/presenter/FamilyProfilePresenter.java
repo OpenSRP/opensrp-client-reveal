@@ -28,7 +28,6 @@ import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.Utils;
 
 import timber.log.Timber;
 
@@ -112,11 +111,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void onRegistrationSaved(boolean editMode, boolean isSaved, FamilyEventClient eventClient) {
-        if (!editMode && isSaved && Utils.isFocusInvestigationOrMDA()) {
-            getInteractor().generateTasks(getView().getApplicationContext(),
-                    eventClient.getEvent().getBaseEntityId(), structureId);
-            return;
-        } else if (editMode && isSaved) {
+        if (editMode && isSaved) {
             for (Obs obs : eventClient.getEvent().getObs()) {
                 if (obs.getFieldCode().equals(DatabaseKeys.OLD_FAMILY_NAME)) {
                     String oldSurname = obs.getValue().toString();
@@ -191,8 +186,6 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
             formName = JSON_FORM.THAILAND_FAMILY_UPDATE;
         } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
             formName = JSON_FORM.ZAMBIA_FAMILY_UPDATE;
-        } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
-            formName = JSON_FORM.REFAPP_FAMILY_UPDATE;
         } else {
             formName = JSON_FORM.FAMILY_UPDATE;
         }

@@ -115,7 +115,7 @@ public class ListTaskInteractor extends BaseInteractor {
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
         structureRepository = RevealApplication.getInstance().getContext().getStructureRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
-        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
+        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository);
         revealApplication = RevealApplication.getInstance();
     }
 
@@ -423,6 +423,7 @@ public class ListTaskInteractor extends BaseInteractor {
             details.put(Constants.Properties.TASK_STATUS, task.getStatus().name());
             details.put(Constants.Properties.LOCATION_ID, feature.id());
             details.put(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
+            details.put(Constants.Properties.PLAN_IDENTIFIER, task.getPlanIdentifier());
             task.setBusinessStatus(NOT_ELIGIBLE);
             task.setStatus(Task.TaskStatus.COMPLETED);
             task.setLastModified(new DateTime());

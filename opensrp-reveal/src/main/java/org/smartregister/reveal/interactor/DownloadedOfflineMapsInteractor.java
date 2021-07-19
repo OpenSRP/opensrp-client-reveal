@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+
 import androidx.core.util.Pair;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;

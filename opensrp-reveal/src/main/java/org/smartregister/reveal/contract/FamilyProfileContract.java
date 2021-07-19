@@ -1,7 +1,7 @@
 package org.smartregister.reveal.contract;
 
 import android.app.Activity;
-import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import org.smartregister.clientandeventmodel.Client;
@@ -27,8 +27,6 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
     }
 
     interface Interactor extends org.smartregister.family.contract.FamilyProfileContract.Interactor {
-
-        void generateTasks(Context applicationContext, String baseEntityId, String structureId);
 
         void updateFamilyMemberName(@NonNull Client family, Event event, @NonNull String oldFamilyName);
 

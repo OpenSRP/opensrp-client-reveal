@@ -2,11 +2,12 @@ package org.smartregister.reveal.view;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
+import androidx.viewpager.widget.ViewPager;
 
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.reveal.R;

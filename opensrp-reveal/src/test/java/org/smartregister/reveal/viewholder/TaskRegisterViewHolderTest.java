@@ -153,6 +153,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
         when(taskDetails.getTaskCount()).thenReturn(2);
         when(taskDetails.isFamilyRegistered()).thenReturn(true);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         when(taskDetails.isBednetDistributed()).thenReturn(true);
         when(taskDetails.isBloodScreeningDone()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
@@ -172,6 +173,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.getTaskCount()).thenReturn(2);
         when(taskDetails.isFamilyRegistered()).thenReturn(true);
         when(taskDetails.isBednetDistributed()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         when(taskDetails.isBloodScreeningDone()).thenReturn(false);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
@@ -191,6 +193,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.isFamilyRegistered()).thenReturn(true);
         when(taskDetails.isBednetDistributed()).thenReturn(true);
         when(taskDetails.isBloodScreeningDone()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -208,6 +211,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.getTaskCount()).thenReturn(2);
         when(taskDetails.isFamilyRegistered()).thenReturn(true);
         when(taskDetails.isBednetDistributed()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         when(taskDetails.isBloodScreeningDone()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
@@ -227,6 +231,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.isFamilyRegTaskExists()).thenReturn(true);
         when(taskDetails.isFamilyRegistered()).thenReturn(false);
         when(taskDetails.isBednetDistributed()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         when(taskDetails.isBloodScreeningDone()).thenReturn(false);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
@@ -245,6 +250,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.getTaskCount()).thenReturn(2);
         when(taskDetails.isFamilyRegistered()).thenReturn(true);
         when(taskDetails.isMdaAdhered()).thenReturn(true);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -263,6 +269,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.isFamilyRegistered()).thenReturn(true);
         when(taskDetails.isMdaAdhered()).thenReturn(false);
         when(taskDetails.isFullyReceived()).thenReturn(true);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -281,6 +288,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.isFamilyRegistered()).thenReturn(true);
         when(taskDetails.isMdaAdhered()).thenReturn(false);
         when(taskDetails.isFullyReceived()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         when(taskDetails.isPartiallyReceived()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
@@ -300,6 +308,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.isFamilyRegistered()).thenReturn(true);
         when(taskDetails.isMdaAdhered()).thenReturn(false);
         when(taskDetails.isFullyReceived()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         when(taskDetails.isPartiallyReceived()).thenReturn(false);
         when(taskDetails.isNoneReceived()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
@@ -323,6 +332,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.isPartiallyReceived()).thenReturn(false);
         when(taskDetails.isNoneReceived()).thenReturn(false);
         when(taskDetails.isNotEligible()).thenReturn(true);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -344,6 +354,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.isPartiallyReceived()).thenReturn(false);
         when(taskDetails.isNoneReceived()).thenReturn(false);
         when(taskDetails.isNotEligible()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -366,6 +377,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.isPartiallyReceived()).thenReturn(false);
         when(taskDetails.isNoneReceived()).thenReturn(false);
         when(taskDetails.isNotEligible()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -382,6 +394,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         setFIAsCurrentPlan();
         when(taskDetails.getTaskCount()).thenReturn(2);
         when(taskDetails.getCompleteTaskCount()).thenReturn(2);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -398,6 +411,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         setMDAAsCurrentPlan();
         when(taskDetails.getTaskCount()).thenReturn(2);
         when(taskDetails.getCompleteTaskCount()).thenReturn(2);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -430,8 +444,10 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.getTaskCount()).thenReturn(1);
         when(taskDetails.isFamilyRegistered()).thenReturn(false);
         when(taskDetails.isBednetDistributed()).thenReturn(true);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         when(taskDetails.isBloodScreeningDone()).thenReturn(false);
         when(taskDetails.getTaskCode()).thenReturn(BEDNET_DISTRIBUTION);
+        when(cardDetails.getStatusColor()).thenReturn(null);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
@@ -449,6 +465,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         when(taskDetails.getTaskCount()).thenReturn(1);
         when(taskDetails.isFamilyRegistered()).thenReturn(false);
         when(taskDetails.isBednetDistributed()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(true);
         when(taskDetails.isBloodScreeningDone()).thenReturn(true);
         when(taskDetails.getTaskCode()).thenReturn(BLOOD_SCREENING);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
@@ -457,6 +474,25 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         assertEquals(context.getString(R.string.view_tasks), taskDetails.getText());
         assertEquals(context.getColor(R.color.text_black), taskDetails.getCurrentTextColor());
         assertEquals(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg).getConstantState(), taskDetails.getBackground().getConstantState());
+        taskDetails.performClick();
+        verify(onClickListener).onClick(taskDetails);
+
+    }
+
+    @Test
+    public void testMultipleTasksForNonFamilyRegistration() {
+        setFIAsCurrentPlan();
+        when(taskDetails.getPendingTasksCount()).thenReturn(2);
+        when(taskDetails.isFamilyRegistered()).thenReturn(false);
+        when(taskDetails.isBednetDistributed()).thenReturn(false);
+        when(taskDetails.hasRegisteredFamily()).thenReturn(false);
+        when(taskDetails.isBloodScreeningDone()).thenReturn(true);
+        when(taskDetails.getTaskCode()).thenReturn(BLOOD_SCREENING);
+        viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
+        TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
+        assertEquals(View.VISIBLE, taskDetails.getVisibility());
+        assertEquals(context.getString(R.string.view_tasks), taskDetails.getText());
+        assertEquals(context.getColor(R.color.text_black), taskDetails.getCurrentTextColor());
         taskDetails.performClick();
         verify(onClickListener).onClick(taskDetails);
 

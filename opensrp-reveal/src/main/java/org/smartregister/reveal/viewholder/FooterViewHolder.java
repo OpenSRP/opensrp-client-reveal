@@ -1,8 +1,9 @@
 package org.smartregister.reveal.viewholder;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by samuelgithengi on 4/8/19.

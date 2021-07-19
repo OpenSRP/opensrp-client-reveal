@@ -1,6 +1,7 @@
 package org.smartregister.reveal.fragment;
 
 import android.content.Context;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.junit.Before;

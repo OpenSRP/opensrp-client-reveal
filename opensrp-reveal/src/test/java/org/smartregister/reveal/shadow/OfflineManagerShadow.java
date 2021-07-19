@@ -1,6 +1,7 @@
 package org.smartregister.reveal.shadow;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.offline.OfflineManager;

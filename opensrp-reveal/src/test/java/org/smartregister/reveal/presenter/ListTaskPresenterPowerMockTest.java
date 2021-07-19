@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+
 import androidx.appcompat.app.AlertDialog;
 
 import com.mapbox.geojson.Feature;

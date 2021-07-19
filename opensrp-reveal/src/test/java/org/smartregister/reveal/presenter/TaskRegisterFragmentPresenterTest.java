@@ -13,6 +13,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.Context;
@@ -25,6 +26,7 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
+import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
@@ -65,6 +67,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 
 /**
  * Created by samuelgithengi on 3/27/19.
@@ -136,7 +140,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         Cache<org.smartregister.domain.Location> cache = new Cache<>();
         operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, org.smartregister.domain.Location.class);
         cache.get("MTI_84", () -> operationalArea);
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class,"cache", cache);
         when(this.view.getLocationUtils()).thenReturn(locationUtils);
     }
 
@@ -310,6 +314,23 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnTaskSelectedForMultipleCompletedTasks() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCount(3);
+        taskDetails.setCompleteTaskCount(1);
+        presenter.onTaskSelected(taskDetails, true);
+        verify(view).openTasksScreen(taskDetails);
+    }
+
+    @Test
+    public void testTaskDetailsPendingCount() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCount(3);
+        taskDetails.setCompleteTaskCount(1);
+        assertEquals(2, taskDetails.getPendingTasksCount());
+    }
+
+    @Test
     public void testOnTaskSelectedShouldLaunchForm() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
@@ -461,6 +482,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testOnLocationValidatedStartsFamilyForm() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskCode(Intervention.REGISTER_FAMILY);
+        taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
         presenter.setTaskDetails(taskDetails);
         presenter.onLocationValidated();
         verify(view).registerFamily(taskDetails);
@@ -754,6 +776,80 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.onTaskInfoReset();
         verify(view).showProgressView();
         verify(interactor).findTasks(any(), any(), any(), anyString());
+    }
+
+    @Test
+    public void testOnLocationValidatedLarvalDipping() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskCode(Intervention.LARVAL_DIPPING);
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        presenter.setTaskDetails(taskDetails);
+        presenter.onLocationValidated();
+        verify(interactor).findLastEvent(taskDetails.getTaskEntity(), LARVAL_DIPPING_EVENT);
+    }
+
+    @Test
+    public void testOnLocationValidatedMosquitoCollection() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskCode(Intervention.MOSQUITO_COLLECTION);
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        presenter.setTaskDetails(taskDetails);
+        presenter.onLocationValidated();
+        verify(interactor).findLastEvent(taskDetails.getTaskEntity(), MOSQUITO_COLLECTION_EVENT);
+    }
+
+    @Test
+    public void testOnLocationValidatedRegistrationCompleted() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        presenter.setTaskDetails(taskDetails);
+        presenter.onLocationValidated();
+        verify(interactor).fetchFamilyDetails(taskDetails.getStructureId());
+    }
+
+    @Test
+    public void testOnEventFoundError() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskCode(Intervention.BEDNET_DISTRIBUTION);
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        presenter.setTaskDetails(taskDetails);
+        presenter.onEventFound(null);
+        verify(view).displayError(R.string.opening_form_title, R.string.form_not_found);
+        verify(view).hideProgressDialog();
+    }
+
+    @Test
+    public void testOnEventRegistration() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        JSONObject json = mock(JSONObject.class);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        when(jsonFormUtils.getFormJSON(any(), any(), any(), any())).thenReturn(json);
+        when(jsonFormUtils.getFormName(any(), any())).thenReturn("json");
+        presenter.setTaskDetails(taskDetails);
+        presenter.onEventFound(null);
+        verify(view, never()).startForm(json);
+        verify(view).hideProgressDialog();
+    }
+
+    @Test
+    public void testOnEventOpenForm() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskCode(Intervention.BEDNET_DISTRIBUTION);
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        JSONObject json = mock(JSONObject.class);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        when(jsonFormUtils.getFormJSON(any(), any(), any(), any())).thenReturn(json);
+        when(jsonFormUtils.getFormName(any(), any())).thenReturn("json");
+        presenter.setTaskDetails(taskDetails);
+        presenter.onEventFound(null);
+        verify(view).startForm(json);
+        verify(view).hideProgressDialog();
     }
 
 }

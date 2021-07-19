@@ -1,6 +1,7 @@
 package org.smartregister.reveal.job;
 
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.evernote.android.job.Job;

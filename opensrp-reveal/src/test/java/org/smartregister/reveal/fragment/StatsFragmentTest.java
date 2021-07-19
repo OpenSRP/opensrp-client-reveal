@@ -1,7 +1,8 @@
 package org.smartregister.reveal.fragment;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.junit.Before;
 import org.junit.Rule;

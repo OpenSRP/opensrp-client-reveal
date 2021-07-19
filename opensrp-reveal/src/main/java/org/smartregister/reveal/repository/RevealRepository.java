@@ -230,7 +230,7 @@ public class RevealRepository extends Repository {
     }
 
     private void upgradeToVersion5(SQLiteDatabase db) {
-        if ((BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) && !isColumnExists(db, EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED)) {
+        if ((BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN || BuildConfig.BUILD_COUNTRY == Country.REFAPP) && !isColumnExists(db, EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED)) {
             db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR ", EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED));
         }
     }
@@ -285,7 +285,7 @@ public class RevealRepository extends Repository {
     }
 
     private void upgradeToVersion11(SQLiteDatabase db) {
-        if (BuildConfig.BUILD_COUNTRY != Country.NAMIBIA) {
+        if (BuildConfig.BUILD_COUNTRY != Country.NAMIBIA && BuildConfig.BUILD_COUNTRY != Country.REFAPP) {
             return;
         }
         db.delete(SPRAYED_STRUCTURES, null, null);

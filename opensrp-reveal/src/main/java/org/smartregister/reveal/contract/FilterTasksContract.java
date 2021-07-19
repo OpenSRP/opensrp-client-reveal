@@ -2,6 +2,7 @@ package org.smartregister.reveal.contract;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+
 import androidx.annotation.StringRes;
 
 import com.google.android.flexbox.FlexboxLayout;

@@ -50,6 +50,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
+import org.smartregister.AllConstants.INTENT_KEY;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.SyncProgress;
@@ -77,7 +78,7 @@ import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
@@ -96,6 +97,7 @@ import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
+import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
@@ -431,8 +433,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     public void positionMyLocationAndLayerSwitcher() {
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-        if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.NAMIBIA
-                && getBuildCountry() != Country.SENEGAL) {
+        if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.NAMIBIA && getBuildCountry() != Country.SENEGAL &&
+                !(getBuildCountry() == Country.REFAPP && R.string.irs == org.smartregister.reveal.util.Utils.getInterventionLabel())) {
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);
         } else {
             int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
@@ -495,7 +497,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_undo_spray) {
-            if(isZambiaIRSLite()) {
+            if (isZambiaIRSLite()) {
                 displayResetInterventionTaskDialog(IRS_VERIFICATION);
             } else {
                 displayResetInterventionTaskDialog(IRS);
@@ -541,7 +543,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
         FilterConfiguration.FilterConfigurationBuilder builder = FilterConfiguration.builder();
-        if (BuildConfig.BUILD_COUNTRY.equals(Country.NAMIBIA)) {
+        if (BuildConfig.BUILD_COUNTRY.equals(Country.NAMIBIA) ||
+                (BuildConfig.BUILD_COUNTRY == Country.REFAPP && R.string.irs == org.smartregister.reveal.util.Utils.getInterventionLabel())) {
             builder.taskCodeLayoutEnabled(false)
                     .interventionTypeLayoutEnabled(false)
                     .businessStatusList(Arrays.asList(NOT_VISITED, NOT_SPRAYED, PARTIALLY_SPRAYED, SPRAYED))
@@ -674,7 +677,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private BoundaryLayer createBoundaryLayer(Feature operationalArea) {
         return new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
-                .setLabelProperty(org.smartregister.reveal.util.Constants.Map.NAME_PROPERTY)
+                .setLabelProperty(Map.NAME_PROPERTY)
                 .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
                 .setLabelColorInt(Color.WHITE)
                 .setBoundaryColor(Color.WHITE)
@@ -890,7 +893,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         formOpening = false;
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
         ValidateAssignmentReceiver.getInstance().addListener(this);
-        IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
+        IntentFilter filter = new IntentFilter(STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
         IntentFilter syncProgressFilter = new IntentFilter(AllConstants.SyncProgressConstants.ACTION_SYNC_PROGRESS);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(syncProgressBroadcastReceiver, syncProgressFilter);
@@ -1015,9 +1018,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             boolean localSyncDone;
-            if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
+            if (STRUCTURE_TASK_SYNCED.equals(intent.getAction()) && extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
                 float bufferRadius = getLocationBuffer() / getPixelsPerDPI(getResources());
                 kujakuMapView.setLocationBufferRadius(bufferRadius);
+            } else if (STRUCTURE_TASK_SYNCED.equals(intent.getAction())) {
+                localSyncDone = extras != null && extras.getBoolean(LOCAL_SYNC_DONE);
+                listTaskPresenter.refreshStructures(localSyncDone);
+            } else if (INTENT_KEY.TASK_GENERATED_EVENT.equals(intent.getAction())) {
+                Task task = extras != null ? (Task) extras.getSerializable(INTENT_KEY.TASK_GENERATED) : null;
+                if (task != null) {
+                    listTaskPresenter.resetFeatureTasks(task.getStructureId(), task);
+                }
             }
             localSyncDone = extras != null && extras.getBoolean(LOCAL_SYNC_DONE);
             listTaskPresenter.refreshStructures(localSyncDone);

@@ -77,7 +77,7 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
         jurisdiction.setId("2980");
         Cache<Location> cache = mock(Cache.class);
         Mockito.when(cache.get(anyString(), any())).thenReturn(jurisdiction);
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class,"cache", cache);
     }
 
 

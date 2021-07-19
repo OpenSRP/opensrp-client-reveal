@@ -1,8 +1,9 @@
 package org.smartregister.reveal.presenter;
 
 import android.app.Activity;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.json.JSONObject;
 import org.junit.Before;

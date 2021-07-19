@@ -207,6 +207,14 @@
           "json_mapping": {
             "field": "attributes.dateRemoved"
           }
+        },
+        {
+          "column_name": "date_removed",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "dateArchived"
+          }
         }
       ]
     },
@@ -349,6 +357,14 @@
           "type": "Client",
           "json_mapping": {
             "field": "attributes.dateRemoved"
+          }
+        },
+        {
+          "column_name": "date_removed",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "dateArchived"
           }
         }
       ]
@@ -532,6 +548,158 @@
           "type": "Event",
           "json_mapping": {
             "field": "eventDate"
+          }
+        },
+        {
+          "column_name": "person_tested",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "personTested"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ec_events",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "formSubmissionId"
+          }
+        },
+        {
+          "column_name": "formSubmissionId",
+          "type": "Event",
+          "json_mapping": {
+            "field": "details.formSubmissionId"
+          }
+        },
+        {
+          "column_name": "event_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventDate"
+          }
+        },
+        {
+          "column_name": "event_type",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventType"
+          }
+        },
+        {
+          "column_name": "provider_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "providerId"
+          }
+        },
+        {
+          "column_name": "sop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "supervisor"
+          }
+        },
+        {
+          "column_name": "sop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "sprayop_code"
+          }
+        },
+        {
+          "column_name": "sop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "fieldOfficer"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "structure_num"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "zone"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "village"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "Villagename"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "health_facility"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "business_status"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "mobilized"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "spray_status"
+          }
+        },
+        {
+          "column_name": "found",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "found"
+          }
+        },
+        {
+          "column_name": "sprayed",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "sprayed"
           }
         }
       ]

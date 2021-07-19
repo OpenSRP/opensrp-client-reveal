@@ -50,6 +50,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             eventClient.getEvent().addDetails(Properties.TASK_BUSINESS_STATUS, taskBusinessStatus);
             eventClient.getEvent().addDetails(Properties.TASK_STATUS, taskStatus);
             eventClient.getEvent().addDetails(Properties.LOCATION_UUID, structureId);
+            eventClient.getEvent().addDetails(Properties.PLAN_EVALUATION_ENTITY_ID, structureId);
             eventClient.getEvent().addDetails(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
             String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
             eventClient.getEvent().addDetails(Properties.PLAN_IDENTIFIER, planIdentifier);

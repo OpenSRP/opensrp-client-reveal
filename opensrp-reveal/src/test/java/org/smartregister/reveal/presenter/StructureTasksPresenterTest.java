@@ -2,6 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Location;
@@ -17,10 +19,12 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
@@ -83,7 +87,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         jurisdiction.setId(jurisdictionId);
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(jurisdiction);
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class, "cache",cache);
         presenter.findTasks(structureId);
         verify(interactor).findTasks(structureId, planId, jurisdictionId);
         verify(prefsUtil).getCurrentPlanId();
@@ -106,7 +110,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         jurisdiction.setId(jurisdictionId);
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(jurisdiction);
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class, "cache", cache);
         Whitebox.setInternalState(presenter, "structureId", structureId);
         presenter.refreshTasks();
         verify(interactor).findTasks(structureId, planId, jurisdictionId);
@@ -275,11 +279,82 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         jurisdiction.setId(jurisdictionId);
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(jurisdiction);
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class, "cache",cache);
 
         presenter.onTaskInfoReset(structureId);
         verify(interactor).findTasks(structureId, planId, jurisdictionId);
     }
 
+
+    @Test
+    public void testLocationValidatedForFamilyRegisterTask() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        presenter.setTaskDetails(taskDetails);
+        presenter.onLocationValidated();
+        verify(view).registerFamily(taskDetails);
+    }
+
+    @Test
+    public void testLocationValidatedForEdit() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+        taskDetails.setEdit(true);
+        taskDetails.setTaskCode(Constants.Intervention.BEDNET_DISTRIBUTION);
+        presenter.setTaskDetails(taskDetails);
+        presenter.onLocationValidated();
+        verify(interactor).findLastEvent(taskDetails);
+    }
+
+    @Test
+    public void testLocationValidatedForCompletedRegisteration() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+        presenter.setTaskDetails(taskDetails);
+        presenter.onLocationValidated();
+        verify(view).hideProgressDialog();
+    }
+
+    @Test
+    public void testOnEventFoundError() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        presenter.setTaskDetails(taskDetails);
+        presenter.onEventFound(null);
+        verify(view).displayError(R.string.opening_form_title, R.string.form_not_found);
+        verify(view).hideProgressDialog();
+    }
+
+    @Test
+    public void testOnEventBednetDistribution() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskCode(Intervention.BEDNET_DISTRIBUTION);
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        JSONObject json = mock(JSONObject.class);
+        BaseFormFragmentInteractor formInteractor = mock(BaseFormFragmentInteractor.class);
+        Whitebox.setInternalState(presenter, "formInteractor", formInteractor);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        when(jsonFormUtils.getFormJSON(any(), any(), any(), any())).thenReturn(json);
+        when(jsonFormUtils.getFormName(any(), any())).thenReturn("json");
+        presenter.setTaskDetails(taskDetails);
+        presenter.onEventFound(null);
+        verify(formInteractor).findNumberOfMembers(taskDetails.getTaskEntity(), json);
+        verify(view, never()).startForm(json);
+        verify(view).hideProgressDialog();
+    }
+
+    @Test
+    public void testOnEventOpenForm() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        RevealJsonFormUtils jsonFormUtils = PowerMockito.mock(RevealJsonFormUtils.class);
+        JSONObject json = mock(JSONObject.class);
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        when(jsonFormUtils.getFormJSON(any(), any(), any(), any())).thenReturn(json);
+        when(jsonFormUtils.getFormName(any(), any())).thenReturn("json");
+        presenter.setTaskDetails(taskDetails);
+        presenter.onEventFound(null);
+        verify(view).startForm(json);
+        verify(view).hideProgressDialog();
+    }
 
 }

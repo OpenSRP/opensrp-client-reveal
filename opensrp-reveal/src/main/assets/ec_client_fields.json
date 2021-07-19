@@ -11,6 +11,13 @@
           }
         },
         {
+          "column_name": "plan_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "details.planIdentifier"
+          }
+        },
+        {
           "column_name": "structure_name",
           "type": "Event",
           "json_mapping": {
@@ -23,7 +30,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "sprayStatus"
+            "concept": "business_status"
           }
         },
         {
@@ -53,7 +60,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "notSprayedReason"
+            "concept": "unsprayedReasonHH"
           }
         },
         {
@@ -61,7 +68,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "notSprayedOtherReason"
+            "concept": "refusalReasonOtherHH"
           }
         },
         {
@@ -69,7 +76,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "familyHeadName"
+            "concept": "nameHoH"
           }
         },
         {

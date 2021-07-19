@@ -1,6 +1,7 @@
 package org.smartregister.reveal.repository;
 
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 
 import com.mapbox.geojson.Feature;

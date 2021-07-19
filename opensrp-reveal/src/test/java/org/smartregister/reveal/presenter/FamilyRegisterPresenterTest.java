@@ -82,7 +82,6 @@ public class FamilyRegisterPresenterTest extends BaseUnitTest {
         presenter = spy(presenter);
         presenter.onRegistrationSaved(false,true,eventClientList);
         verify(presenter, never()).onTasksGenerated(eventClientList);
-        verify(interactor).generateTasks(eventClientList, structureId, context);
     }
 
 

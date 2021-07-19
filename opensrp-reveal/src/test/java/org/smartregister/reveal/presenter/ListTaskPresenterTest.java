@@ -969,7 +969,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     @Test
     public void testOnAddStructureClickedShouldPopulateFormAndOpenIt() throws JSONException {
         Point point = Point.fromLngLat(28.740448054710495, -9.311798364364043);
-        when(jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT)).thenReturn(JsonForm.ADD_STRUCTURE_FORM);
+        when(jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT,null)).thenReturn(JsonForm.ADD_STRUCTURE_FORM);
         when(jsonFormUtils.getFormString(listTaskView.getContext(), JsonForm.ADD_STRUCTURE_FORM, null)).thenReturn(TestingUtils.AddStructureFormJson);
         Whitebox.setInternalState(listTaskPresenter, "operationalArea", feature);
         listTaskPresenter.onAddStructureClicked(true, point.toJson());

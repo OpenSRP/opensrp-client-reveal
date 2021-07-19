@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
@@ -10,9 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.domain.Event;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
@@ -110,6 +111,10 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     @Override
     public void onLocationValidated() {
         StructureTaskDetails taskDetails = (StructureTaskDetails) getTaskDetails();
+        if (Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())
+                && !Task.TaskStatus.COMPLETED.name().equals(getTaskDetails().getTaskStatus())) {
+            getView().registerFamily(getTaskDetails());
+        }
         if (taskDetails.isEdit() && (Constants.Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
             interactor.findLastEvent(taskDetails);
         } else {

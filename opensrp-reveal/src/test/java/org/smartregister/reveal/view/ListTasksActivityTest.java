@@ -338,6 +338,15 @@ public class ListTasksActivityTest extends BaseUnitTest {
         assertEquals(TaskRegisterActivity.class, shadowOf(startedIntent).getIntentClass());
     }
 
+    @Test
+    public void testOpenTaskRegisterWithFilter() {
+        TaskFilterParams  mock = mock(TaskFilterParams.class);
+        listTasksActivity.openTaskRegister(mock);
+        Intent startedIntent = shadowOf(listTasksActivity).getNextStartedActivity();
+        assertEquals(TaskRegisterActivity.class, shadowOf(startedIntent).getIntentClass());
+        assertTrue(startedIntent.hasExtra(FILTER_SORT_PARAMS));
+    }
+
 
     @Test
     public void testOnAddStructure() {

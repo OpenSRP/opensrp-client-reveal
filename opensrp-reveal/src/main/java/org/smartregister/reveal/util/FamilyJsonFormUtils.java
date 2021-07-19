@@ -1,8 +1,9 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
-import androidx.annotation.StringRes;
 import android.util.Log;
+
+import androidx.annotation.StringRes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;

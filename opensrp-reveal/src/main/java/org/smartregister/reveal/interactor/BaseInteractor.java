@@ -1,8 +1,10 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+import android.content.IntentFilter;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,23 +37,20 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.receiver.TaskGenerationReceiver;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
-import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -69,6 +68,7 @@ import java.util.UUID;
 import timber.log.Timber;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
+import static org.smartregister.AllConstants.INTENT_KEY.TASK_GENERATED_EVENT;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.Utils.metadata;
@@ -118,7 +118,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
             .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
-    private RevealApplication revealApplication;
+    private final RevealApplication revealApplication;
 
     protected TaskRepository taskRepository;
 
@@ -136,13 +136,11 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     protected RevealClientProcessor clientProcessor;
 
-    private TaskUtils taskUtils;
-
-    private SQLiteDatabase database;
+    private final SQLiteDatabase database;
 
     private CommonRepository commonRepository;
 
-    private PreferencesUtil prefsUtil;
+    private final PreferencesUtil prefsUtil;
 
     public BaseInteractor(BasePresenter presenterCallBack) {
         revealApplication = RevealApplication.getInstance();
@@ -153,7 +151,6 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         eventClientRepository = revealApplication.getContext().getEventClientRepository();
         clientProcessor = RevealClientProcessor.getInstance(revealApplication.getApplicationContext());
         sharedPreferences = revealApplication.getContext().allSharedPreferences();
-        taskUtils = TaskUtils.getInstance();
         database = revealApplication.getRepository().getReadableDatabase();
         prefsUtil = PreferencesUtil.getInstance();
     }
@@ -176,9 +173,6 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     saveRegisterStructureForm(jsonForm);
                     break;
                 case EventType.MDA_DISPENSE:
-                    taskUtils.generateMDAAdherenceTask(RevealApplication.getInstance().getApplicationContext(),
-                            getString(jsonForm, ENTITY_ID), getJSONObject(jsonForm, DETAILS).optString(Properties.LOCATION_ID));
-
                 case BLOOD_SCREENING_EVENT:
                 case EventType.MDA_ADHERENCE:
                     saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
@@ -205,6 +199,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     public void handleLasteventFound(org.smartregister.domain.Event event) {
         // handle in child class
     }
+
 
     private org.smartregister.domain.Event saveEvent(JSONObject jsonForm, String encounterType, String bindType) throws JSONException {
         String entityId = getString(jsonForm, ENTITY_ID);
@@ -327,36 +322,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     structureRepository.addOrUpdate(structure);
                     revealApplication.setSynced(false);
                     Context applicationContext = revealApplication.getApplicationContext();
-                    Task task = null;
-                    if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
-                        task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
-                    } else {
-                        if (StructureType.RESIDENTIAL.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, Intervention.IRS, R.string.irs_task_description);
-                        } else if (StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, Intervention.MOSQUITO_COLLECTION, R.string.mosquito_collection_task_description);
-                        } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, Intervention.LARVAL_DIPPING, R.string.larval_dipping_task_description);
-                        } else if (StructureType.POTENTIAL_AREA_OF_TRANSMISSION.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, PAOT, R.string.poat_task_description);
-                        }
-                    }
-                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
-                    Task finalTask = task;
-                    appExecutors.mainThread().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            Map<String, String> taskProperties = new HashMap<>();
-                            if (finalTask != null) {
 
-                                taskProperties.put(Properties.TASK_IDENTIFIER, finalTask.getIdentifier());
-                                taskProperties.put(Properties.TASK_BUSINESS_STATUS, finalTask.getBusinessStatus());
-                                taskProperties.put(Properties.TASK_STATUS, finalTask.getStatus().name());
-                                taskProperties.put(Properties.TASK_CODE, finalTask.getCode());
+                    IntentFilter filter = new IntentFilter(TASK_GENERATED_EVENT);
+                    TaskGenerationReceiver taskGenerationReceiver = new TaskGenerationReceiver(task -> {
+                        appExecutors.mainThread().execute(() -> {
+                            Map<String, String> taskProperties = new HashMap<>();
+                            if (task != null) {
+
+                                taskProperties.put(Properties.TASK_IDENTIFIER, task.getIdentifier());
+                                taskProperties.put(Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                taskProperties.put(Properties.TASK_STATUS, task.getStatus().name());
+                                taskProperties.put(Properties.TASK_CODE, task.getCode());
                             }
                             taskProperties.put(Properties.LOCATION_UUID, structure.getProperties().getUid());
                             taskProperties.put(Properties.LOCATION_VERSION, structure.getProperties().getVersion() + "");
@@ -374,8 +350,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                             double zoomLevel = Double.parseDouble(zoomObs.getValue().toString());
 
                             presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates, zoomLevel);
-                        }
+                        });
                     });
+                    LocalBroadcastManager.getInstance(applicationContext).registerReceiver(taskGenerationReceiver, filter);
+                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                 } catch (JSONException e) {
                     Timber.e(e, "Error saving new Structure");
                     presenterCallBack.onFormSaveFailure(REGISTER_STRUCTURE_EVENT);
@@ -501,7 +479,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
                     EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
 
-            try (Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});) {
+            try (Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType})) {
 
                 if (cursor.moveToFirst()) {
                     String eventJSON = cursor.getString(0);

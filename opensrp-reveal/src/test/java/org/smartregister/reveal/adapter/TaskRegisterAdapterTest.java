@@ -261,4 +261,76 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
         adapter.onBindViewHolder(holder, 0);
         assertEquals(structureName, ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
     }
+
+    @Test
+    public void testOnBindViewHolderMDAAdherence() {
+        String structureName = "William residence";
+        TaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.MDA_ADHERENCE);
+        task.setStructureName(structureName);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals(structureName, ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
+    public void testOnBindViewHolderMDADispense() {
+        String structureName = "William residence";
+        TaskDetails task = taskDetailsList.get(0);
+        task.setStructureName("Dispense MDA");
+        task.setTaskCode(Constants.Intervention.MDA_DISPENSE);
+        task.setStructureName(structureName);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals(structureName, ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
+    public void testOnBindViewHolderMosquitoCollection() {
+        TaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.MOSQUITO_COLLECTION);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals("Mosquito collection point", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
+    public void testOnBindViewHolderLaravalDipping() {
+        TaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.LARVAL_DIPPING);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals("Larval breeding site", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+    @Test
+    public void testOnBindViewHolderBCC() {
+        TaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Constants.Intervention.BCC);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals("Behaviour Change communication", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
+
+
+    @Test
+    public void testOnBindViewHolderPAOT() {
+        TaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Intervention.PAOT);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals("Potential Area of Transmission", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
 }

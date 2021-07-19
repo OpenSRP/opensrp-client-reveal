@@ -8,8 +8,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.PlanDefinition;
@@ -20,7 +18,6 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.util.DateTimeTypeConverter;
-import org.smartregister.util.DateTypeConverter;
 import org.smartregister.util.PropertiesConverter;
 
 import java.util.List;
