@@ -14,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.smartregister.domain.Location;
+import org.smartregister.repository.StructureRepository;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.Obs;
 import org.smartregister.reveal.BuildConfig;
@@ -54,6 +56,7 @@ import static org.smartregister.reveal.util.Utils.getCoordsFromGeometry;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 import static org.smartregister.reveal.util.Utils.getResolveLocationTimeoutInSeconds;
+import static org.smartregister.reveal.util.Utils.getStructureByName;
 import static org.smartregister.reveal.util.Utils.isResidentialStructure;
 import static org.smartregister.reveal.util.Utils.showWhenTrue;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
@@ -108,7 +111,7 @@ public class UtilsTest {
         settings.put("draw_operational_area_boundary_and_label", "true");
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
-        assert(getDrawOperationalAreaBoundaryAndLabel());
+        assert (getDrawOperationalAreaBoundaryAndLabel());
     }
 
     @Test
@@ -117,7 +120,7 @@ public class UtilsTest {
         Feature expectedFeature = Feature.fromJson(circleFeatureJSonString);
         assertNotNull(expectedFeature);
         LatLng center = new LatLng(15.0913957, 101.18959799999999);
-        Feature actualFeature = createCircleFeature(center, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_GEO_JSON_CIRCLE_SIDES );
+        Feature actualFeature = createCircleFeature(center, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_GEO_JSON_CIRCLE_SIDES);
 
         assertNotNull(actualFeature);
         assertEquals(expectedFeature.type(), actualFeature.type());
@@ -137,6 +140,17 @@ public class UtilsTest {
         assertFalse(isResidentialStructure(LARVAL_DIPPING));
         assertFalse(isResidentialStructure(null));
         assertFalse(isResidentialStructure(""));
+    }
+
+    @Test
+    public void testGetStructureByName() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+        StructureRepository structureRepository = mock(StructureRepository.class);
+        when(revealApplication.getStructureRepository()).thenReturn(structureRepository);
+
+        Location location = mock(Location.class);
+        when(structureRepository.getLocationByName("sample_location")).thenReturn(location);
+        assertEquals(location, getStructureByName("sample_location"));
     }
 
     private RevealApplication initRevealApplicationMock() throws Exception {

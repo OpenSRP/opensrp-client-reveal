@@ -1,0 +1,205 @@
+{
+  "count": "1",
+  "encounter_type": "mma_adr",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "ADR Report",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "mmaAdrType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "ADR type",
+        "combine_checkbox_option_values": "true",
+        "options": [
+          {
+            "key": "vomitting",
+            "text": "Vomitting",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "vomitting"
+          },
+          {
+            "key": "rash",
+            "text": "Rash",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "rash"
+          },
+          {
+            "key": "headache",
+            "text": "Headache",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "headache"
+          },
+          {
+            "key": "diarrhea",
+            "text": "Diarrhea",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "diarrhea"
+          },
+          {
+            "key": "convulsions",
+            "text": "Convulsions",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "convulsions"
+          },
+          {
+            "key": "visual_impairment",
+            "text": "Visual impairment",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "visual_impairment"
+          },
+          {
+            "key": "Shock",
+            "text": "Shock",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "Shock"
+          },
+          {
+            "key": "other",
+            "text": "Other (specify)",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "other_mmaAdrType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "other_mmaAdrType",
+        "type": "edit_text",
+        "hint": "Specify other type",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-mma-adr-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mmaAdrGrade",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaAdrGrade",
+        "type": "native_radio",
+        "label": "ADR grade",
+        "options": [
+          {
+            "key": "mild",
+            "text": "Mild",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "mild"
+          },
+          {
+            "key": "moderate",
+            "text": "Moderate",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "moderate"
+          },
+          {
+            "key": "severe",
+            "text": "Severe",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "severe"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "mmaAdrOutcome",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ADR outcome",
+        "options": [
+          {
+            "key": "resolved",
+            "text": "Resolved",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "resolved"
+          },
+          {
+            "key": "requiredOutpatientTreatment",
+            "text": "Required outpatient treatment",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "requiredOutpatientTreatment"
+          },
+          {
+            "key": "admission",
+            "text": "Admission",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "admission"
+          },
+          {
+            "key": "died",
+            "text": "Died",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "died"
+          }
+        ]
+      }
+    ]
+  }
+}
+

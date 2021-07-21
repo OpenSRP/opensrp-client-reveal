@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme.Nav.ThemeOverlay">
+
+    <ImageView
+        android:id="@+id/reveal_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_icon_margin"
+        android:contentDescription="@string/reveal_icon"
+        android:scaleType="fitStart"
+        android:src="@drawable/ic_reveal_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/application_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reveal_icon" />
+
+    <TextView
+        android:id="@+id/application_updated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:textColor="@color/text_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/application_version" />
+
+
+    <TextView
+        android:id="@+id/sync_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/sync"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/application_updated" />
+
+    <TextView
+        android:id="@+id/sync_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_second_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/application_updated" />
+
+    <TextView
+        android:id="@+id/sync_progress_bar_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:textColor="@color/text_gray"
+        android:visibility="invisible"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/sync_progress_bar" />
+
+    <ProgressBar
+        android:id="@+id/sync_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:visibility="invisible"
+        android:max="100"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/application_updated"
+        />
+
+    <TextView
+        android:id="@+id/btn_navMenu_p2pSyncBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/device_to_device_sync"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sync_button" />
+
+    <TextView
+        android:id="@+id/btn_navMenu_summaryForms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/summary_forms"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_p2pSyncBtn" />
+
+
+    <TextView
+        android:id="@+id/btn_navMenu_filled_forms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/filled_forms"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_summaryForms" />
+
+    <TextView
+        android:id="@+id/btn_navMenu_offline_maps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/offline_maps"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_filled_forms" />
+
+
+    <View
+        android:id="@+id/header_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:layout_marginBottom="@dimen/drawer_separator_margin"
+        android:background="#DEDEDE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_offline_maps" />
+
+    <TextView
+        android:id="@+id/campaign_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_separator_margin"
+        android:text="NTD School"
+        android:textColor="@color/text_black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_separator" />
+
+    <TextView
+        android:id="@+id/switch_campaign_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="Switch campaign"
+        android:textColor="@color/button_blue"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/campaign_label" />
+
+
+    <TextView
+        android:id="@+id/operational_area_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_separator_margin"
+        android:text="School"
+        android:textColor="@color/text_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/switch_campaign_label"
+        />
+
+
+    <TextView
+        android:id="@+id/operational_area_selector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:layout_marginEnd="@dimen/drawer_margin"
+        android:background="@drawable/nav_border_bg"
+        android:drawableEnd="@drawable/ic_keyboard_arrow_down_small"
+        android:drawablePadding="@dimen/drawer_drawable_padding"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:textColor="@color/text_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/operational_area_label" />
+
+    <TextView
+        android:id="@+id/district_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_separator_margin"
+        android:text="@string/district"
+        android:textColor="@color/text_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/operational_area_selector" />
+
+
+    <TextView
+        android:id="@+id/facility_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/facility"
+        android:textColor="@color/text_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/district_label" />
+
+
+    <TextView
+        android:id="@+id/operator_label"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/operator_top_margin"
+        android:gravity="bottom"
+        android:text="Operator: "
+        android:textColor="@color/text_gray"
+        app:layout_constraintBottom_toTopOf="@id/logout_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/facility_label"
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintVertical_weight="1" />
+
+
+    <TextView
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:layout_marginBottom="10dp"
+        android:text="@string/logout_text"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/operator_label"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DFDFDF"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/divider_margin"
+        app:layout_constraintBottom_toTopOf="@id/attribution"
+        android:layout_marginEnd="@dimen/divider_margin"
+        android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:id="@+id/attribution"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_gray"
+        android:layout_marginStart="@dimen/drawer_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/attribution_text"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

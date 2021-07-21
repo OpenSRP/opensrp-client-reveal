@@ -371,6 +371,29 @@
     <string name="not_tested">Not Tested</string>
     <string name="yes">Yes</string>
 
+    <string name="grade_and_last_name">Grade and last name</string>
+    <string name="grade_and_age">Grade and age</string>
+    <string name="age">Age</string>
+    <string name="sort_students_by">Sort students by</string>
+    <string name="filter_by_grade">Filter by grade</string>
+    <string name="filter_by_age">Filter by age</string>
+    <string name="label_add">+ Add</string>
+    <string name="search_students">Search Students</string>
+    <string name="edit">Edit</string>
+    <string name="child_age">Age %d</string>
+    <string name="add_student">Add student</string>
+    <string name="edit_student">Edit student</string>
+    <string name="mass_drug_administration">Visit child and dispense drugs</string>
+    <string name="record_dose">Record dose</string>
+    <string name="record_adr">Record ADR</string>
+    <string name="dose_given">Dose Given</string>
+    <string name="not_given">Not Given</string>
+    <string name="adult">Adult</string>
+    <string name="range_6_10">6-10</string>
+    <string name="range_11_15">11-15</string>
+    <string name="range_16_18">16-18</string>
+    <string name="filter_or_sort">Filter / Sort</string>
+
     <string name="save_point">Save Point</string>
     <string name="change_point">Change Point</string>
     <string name="save_boundary">Save Boundary</string>
@@ -386,6 +409,7 @@
     <string name="discard_changes_msg">This will undo any unsaved edits you have made on the boundary</string>
     <string name="tap_point_msg">Tap black point to move or delete</string>
     <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
+
     <string name="progressBarLabel">Syncing %s : %d%% </string>
     <string name="device_data_synced">Device data synced</string>
     <string name="device_data_not_synced">Device data not synced</string>

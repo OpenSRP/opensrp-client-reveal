@@ -1,0 +1,49 @@
+---
+name: step1_mmaPzqDosage
+description: mmaPzqDosage status
+priority: 1
+condition: "(step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')) && Integer.parseInt(step1_mmaheight) <= 110"
+actions:
+  - "calculation = step1_mmaPzqDosage = 1"
+---
+name: step1_mmaPzqDosage
+description: mmaPzqDosage status
+priority: 2
+condition: "(step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')) && Integer.parseInt(step1_mmaheight) <= 125"
+actions:
+  - "calculation = step1_mmaPzqDosage = 1.5"
+---
+name: step1_mmaPzqDosage
+description: mmaPzqDosage status
+priority: 3
+condition: "(step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')) && Integer.parseInt(step1_mmaheight) <= 138"
+actions:
+  - "calculation = step1_mmaPzqDosage = 2"
+---
+name: step1_mmaPzqDosage
+description: mmaPzqDosage status
+priority: 4
+condition: "(step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')) && Integer.parseInt(step1_mmaheight) <= 150"
+actions:
+  - "calculation = step1_mmaPzqDosage = 2.5"
+---
+name: step1_mmaPzqDosage
+description: mmaPzqDosage status
+priority: 5
+condition: "(step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')) && Integer.parseInt(step1_mmaheight) <= 160"
+actions:
+  - "calculation = step1_mmaPzqDosage = 3"
+---
+name: step1_mmaPzqDosage
+description: mmaPzqDosage status
+priority: 6
+condition: "(step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')) && Integer.parseInt(step1_mmaheight) <= 178"
+actions:
+  - "calculation = step1_mmaPzqDosage = 4"
+---
+name: step1_mmaPzqDosage
+description: mmaPzqDosage status
+priority: 7
+condition: "(step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')) && Integer.parseInt(step1_mmaheight) > 178"
+actions:
+  - "calculation = step1_mmaPzqDosage = 5"

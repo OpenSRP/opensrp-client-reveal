@@ -1,0 +1,402 @@
+{
+  "count": "1",
+  "encounter_type": "Child Registration",
+  "entity_id": "",
+  "relational_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": "",
+    "look_up": {
+      "entity_id": "",
+      "value": ""
+    }
+  },
+  "step1": {
+    "title": "Add Student",
+    "fields": [
+      {
+        "key": "unique_id",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_identifier",
+        "openmrs_entity_id": "opensrp_id",
+        "type": "hidden",
+        "hint": "ID",
+        "read_only": true,
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the ID"
+        }
+      },
+      {
+        "key": "sactaNoNationalId",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "has_no_id",
+        "type": "check_box",
+        "label": "",
+        "options": [
+          {
+            "key": "noNationalID",
+            "text": "Child does not have a national ID",
+            "text_size": "18px",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "key": "sactaNationalId",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_identifier",
+        "openmrs_entity_id": "national_id",
+        "type": "edit_text",
+        "hint": "National ID",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the ID"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number."
+        },
+        "v_min_length": {
+          "value": "13",
+          "err": "Must be 13 characters"
+        },
+        "v_max_length": {
+          "value": "13",
+          "err": "Must be 13 characters"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sactaRevealId",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_identifier",
+        "openmrs_entity_id": "reveal_id",
+        "hint": "Reveal ID",
+        "text_size": "8sp",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sactaGivenName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
+        "type": "edit_text",
+        "hint": "Child's given name",
+        "edit_type": "name",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "sactaSurname",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "last_name",
+        "type": "edit_text",
+        "hint": "Child's surname",
+        "edit_type": "name",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "sactaSex",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "gender",
+        "type": "native_radio",
+        "label": "Child's allocated sex at birth",
+        "options": [
+          {
+            "key": "Male",
+            "text": "Male"
+          },
+          {
+            "key": "Female",
+            "text": "Female"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "sactaDob",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "birthdate",
+        "type": "date_picker",
+        "hint": "Child's date of birth",
+        "expanded": false,
+        "duration": {
+          "label": "Age"
+        },
+        "min_date": "today-120y",
+        "max_date": "today-6y",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "sactaDobUnk",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "birthdateApprox",
+        "type": "check_box",
+        "label": "",
+        "options": [
+          {
+            "key": "sactaDobUnk",
+            "text": "Date of birth estimated",
+            "text_size": "18px",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "key": "sactaAge",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "age_entered",
+        "type": "edit_text",
+        "hint": "Child's age",
+        "text_size": "8sp",
+        "read_only": true,
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_min": {
+          "value": "5",
+          "err": "Age must be equal or greater than 5"
+        },
+        "v_max": {
+          "value": "120",
+          "err": "Age must be equal or less than 120"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please enter the age"
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sactaAgeCat",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "age_category",
+        "type": "edit_text",
+        "read_only": true,
+        "hint": "Age category",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-calculation.yml"
+            }
+          }
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "sactaCurrEnroll",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "school_enrolled",
+        "type": "native_radio",
+        "label": "Is this child currently enrolled in school?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "sactaCurrSchName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "school_name",
+        "type": "edit_text",
+        "hint": "Name of school attending, if from another school",
+        "edit_type": "name",
+        "text_size": "8sp",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sactaGrade",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "grade",
+        "type": "native_radio",
+        "label": "School grade",
+        "options": [
+          {
+            "key": "Grade 1",
+            "text": "Grade 1"
+          },
+          {
+            "key": "Grade 2",
+            "text": "Grade 2"
+          },
+          {
+            "key": "Grade 3",
+            "text": "Grade 3"
+          },
+          {
+            "key": "Grade 4",
+            "text": "Grade 4"
+          },
+          {
+            "key": "Grade 5",
+            "text": "Grade 5"
+          },
+          {
+            "key": "Grade 6",
+            "text": "Grade 6"
+          },
+          {
+            "key": "Grade 7",
+            "text": "Grade 7"
+          },
+          {
+            "key": "Form 1",
+            "text": "Form 1"
+          },
+          {
+            "key": "Form 2",
+            "text": "Form 2"
+          },
+          {
+            "key": "Form 3",
+            "text": "Form 3"
+          },
+          {
+            "key": "Form 4",
+            "text": "Form 4"
+          },
+          {
+            "key": "Form 5",
+            "text": "Form 5"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sactaClass",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "grade_class",
+        "type": "edit_text",
+        "hint": "Grade class (e.g. 1A, 1B, 1C/D)",
+        "edit_type": "name",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

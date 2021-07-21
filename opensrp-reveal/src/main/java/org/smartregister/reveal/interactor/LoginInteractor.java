@@ -13,6 +13,8 @@ import org.smartregister.view.contract.BaseLoginContract;
 
 import java.lang.ref.WeakReference;
 
+import timber.log.Timber;
+
 public class LoginInteractor extends BaseLoginInteractor implements BaseLoginContract.Interactor {
 
     public LoginInteractor(BaseLoginContract.Presenter loginPresenter) {
@@ -42,6 +44,10 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
             RevealApplication.getInstance().getContext().getHttpAgent().setConnectTimeout(CoreLibrary.getInstance().getSyncConfiguration().getConnectTimeout());
             RevealApplication.getInstance().getContext().getHttpAgent().setReadTimeout(CoreLibrary.getInstance().getSyncConfiguration().getReadTimeout());
         }
-        super.loginWithLocalFlag(view, localLogin, userName, password);
+        try {
+            super.loginWithLocalFlag(view, localLogin, userName, password);
+        }catch (Exception e){
+            Timber.e(e);
+        }
     }
 }

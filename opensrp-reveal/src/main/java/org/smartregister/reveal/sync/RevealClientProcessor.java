@@ -8,7 +8,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Client;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
@@ -43,9 +42,12 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.EventType.CHILD_REGISTRATION;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.SUMMARY_EVENT_TYPES;
+import static org.smartregister.reveal.util.Constants.EventType.UPDATE_CHILD_REGISTRATION;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
@@ -132,6 +134,13 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.PAOT_STATUS);
                 } else if (eventType.equals(TASK_RESET_EVENT)) {
                     continue;
+                } else if (CHILD_REGISTRATION.equals(eventType) || UPDATE_CHILD_REGISTRATION.equals(eventType) || Constants.EventType.MDA_DISPENSE.equals(eventType)) {
+                    try {
+                        Client client = eventClient.getClient();
+                        processEvent(event, client, clientClassification);
+                    } catch (Exception e) {
+                        Timber.e(e);
+                    }
                 } else if (SUMMARY_EVENT_TYPES.contains(event.getEventType())) {
                     processSummaryFormEvent(event, clientClassification);
                 } else {

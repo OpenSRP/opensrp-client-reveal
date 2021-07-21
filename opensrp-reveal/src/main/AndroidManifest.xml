@@ -76,7 +76,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.FamilyRegisterActivity" />
         </activity>
-        <activity android:name="org.smartregister.family.activity.FamilyWizardFormActivity" />
+        <activity
+            android:name="org.smartregister.family.activity.FamilyWizardFormActivity"
+            android:theme="@style/FamilyTheme.NoActionBar" />
         <activity android:name="com.vijay.jsonwizard.activities.JsonWizardFormActivity" />
         <activity
             android:name=".view.FamilyOtherMemberProfileActivity"
@@ -109,6 +111,12 @@
             android:name=".view.OfflineMapsActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ChildRegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".view.ChildProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="org.smartregister.view.activity.DynamicJsonFormActivity"

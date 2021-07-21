@@ -18,6 +18,17 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay.Light" parent="FamilyTheme.AppBarOverlay">
+        <item name="android:textColorPrimary">@color/customAppThemeBlue</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay.Light.Text" parent="AppTheme.AppBarOverlay.Light">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:colorBackground">@color/white</item>
+    </style>
+
     <style name="RevealDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

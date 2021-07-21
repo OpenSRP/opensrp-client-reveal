@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/register_columns"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tvHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sort_bar_grey"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        android:text="Grade 1"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="@dimen/default_font_size_search_bar" />
+
+    <RelativeLayout
+        android:id="@+id/rlDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvHeader"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/patient_column"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/register_list_item_margin"
+            android:layout_marginLeft="@dimen/register_list_item_margin"
+            android:layout_marginTop="@dimen/register_list_top_bottom_margin"
+            android:layout_marginEnd="@dimen/register_list_item_margin"
+            android:layout_marginRight="@dimen/register_list_item_margin"
+            android:layout_marginBottom="@dimen/register_list_top_bottom_margin"
+            android:layout_toStartOf="@+id/linearLayoutAction"
+            android:layout_toLeftOf="@+id/linearLayoutAction"
+            android:orientation="vertical">
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/patient_name"
+                style="@style/CustomFontTextViewStyle.ClientList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingStart="0dp"
+                android:paddingLeft="0dp"
+                android:singleLine="true"
+                android:text="Patient Name"
+                android:textColor="@color/text_black"
+                android:textSize="@dimen/register_list_title_size" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/tvDetails"
+                style="@style/CustomFontTextViewStyle.ClientList.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="5dp"
+                android:text="Age 33, GA: 33 weeks"
+                android:textColor="@color/light_grey_text"
+                android:textSize="@dimen/register_list_desc_size"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutAction"
+            android:layout_width="@dimen/register_list_item_width"
+            android:layout_height="@dimen/register_list_item_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/grey_left_border"
+            android:paddingStart="@dimen/register_list_item_padding"
+            android:paddingLeft="@dimen/register_list_item_padding"
+            android:paddingTop="@dimen/register_list_top_bottom_padding"
+            android:paddingEnd="@dimen/register_list_item_padding"
+            android:paddingRight="@dimen/register_list_item_padding"
+            android:paddingBottom="@dimen/register_list_top_bottom_padding">
+
+            <Button
+                android:id="@+id/btnDue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@drawable/due_dose_bg"
+                android:elevation="@dimen/register_list_elevation"
+                android:gravity="center"
+                android:hapticFeedbackEnabled="true"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:stateListAnimator="@drawable/button"
+                android:text="Record Dose"
+                android:textAllCaps="false"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/mda_partially_received"
+                android:textSize="18sp"
+                android:typeface="normal" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

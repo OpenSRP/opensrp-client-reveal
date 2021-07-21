@@ -138,7 +138,6 @@ public class Utils {
         DocumentConfigurationServiceJob.scheduleJobImmediately(DocumentConfigurationServiceJob.TAG);
     }
 
-
     public static Location getOperationalAreaLocation(String operationalArea) {
         return cache.get(operationalArea, new CacheableData<Location>() {
             @Override
@@ -146,6 +145,10 @@ public class Utils {
                 return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
             }
         });
+    }
+
+    public static Location getStructureByName(String structureName) {
+        return cache.get("struct-" + structureName, () -> RevealApplication.getInstance().getStructureRepository().getLocationByName(structureName));
     }
 
     public static Location getLocationById(String locationId) {

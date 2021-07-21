@@ -373,11 +373,11 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         when(locationHelper.generateDefaultLocationHierarchy(any())).thenReturn(defaultLocations);
 
         FormLocation locationHierarchy = TestingUtils.generateLocationHierarchy();
-        when(locationHelper.generateLocationHierarchyTree(anyBoolean(), any())).thenReturn(Collections.singletonList(locationHierarchy));
+        when(locationHelper.generateLocationHierarchyTree(anyBoolean(), any(), any())).thenReturn(Collections.singletonList(locationHierarchy));
 
         presenter.onShowOperationalAreaSelector();
 
-        verify(locationHelper, times(2)).generateDefaultLocationHierarchy(arrayListArgumentCaptor.capture());
+        verify(locationHelper, times(1)).generateDefaultLocationHierarchy(arrayListArgumentCaptor.capture());
         assertTrue(arrayListArgumentCaptor.getValue().contains(COUNTRY));
         assertTrue(arrayListArgumentCaptor.getValue().contains(PROVINCE));
         assertTrue(arrayListArgumentCaptor.getValue().contains(REGION));

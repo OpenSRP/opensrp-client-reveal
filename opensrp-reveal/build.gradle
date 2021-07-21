@@ -57,7 +57,7 @@ jacoco {
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
     compileOptions {
@@ -69,9 +69,9 @@ android {
     defaultConfig {
         applicationId "org.smartregister.reveal"
         minSdkVersion 18
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 34
-        versionName "5.3.26"
+        versionName "5.3.30"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -223,7 +223,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:4.3.3-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.3.11-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -252,7 +252,7 @@ dependencies {
 
     ///Upgrade to latest native forms issue tracked here
     //https://github.com/OpenSRP/opensrp-client-reveal/issues/1235
-    implementation('org.smartregister:opensrp-client-native-form:1.14.7.3-FORM-CONFIG-RULES-FIX-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:2.0.8-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'

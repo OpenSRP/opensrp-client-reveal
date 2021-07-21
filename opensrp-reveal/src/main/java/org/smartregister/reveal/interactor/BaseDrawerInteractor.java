@@ -136,4 +136,26 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
         };
         appExecutors.diskIO().execute(runnable);
     }
+
+    @Override
+    public void autoSelectPlan(String jurisdictionName) {
+        Runnable runnable = () -> {
+            try{
+
+                Location operationalArea = Utils.getOperationalAreaLocation(jurisdictionName);
+                String jurisdictionIdentifier = operationalArea != null ? operationalArea.getId() : null;
+                Set<PlanDefinition> planDefinitionSet = planDefinitionSearchRepository.findActivePlansByJurisdiction(jurisdictionIdentifier);
+
+                PlanDefinition planDefinition = planDefinitionSet.iterator().next();
+
+                appExecutors.mainThread().execute(() -> presenter.onPlanAutoSelected(planDefinition.getName(), planDefinition.getIdentifier()));
+            }catch (Exception ex){
+                Timber.e(ex);
+                appExecutors.mainThread().execute(() -> presenter.onPlanAutoSelected(null, null));
+            }
+        };
+
+        appExecutors.diskIO().execute(runnable);
+
+    }
 }

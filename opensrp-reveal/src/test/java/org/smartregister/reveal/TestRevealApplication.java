@@ -18,6 +18,7 @@ import org.smartregister.reveal.util.RevealSyncConfiguration;
 import java.util.concurrent.Executors;
 
 import io.ona.kujaku.data.realm.RealmDatabase;
+import timber.log.Timber;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -65,6 +66,10 @@ public class TestRevealApplication extends RevealApplication {
 
     @Override
     public void onTerminate() {
-        //do nothing
+        try {
+            super.onTerminate();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 }
