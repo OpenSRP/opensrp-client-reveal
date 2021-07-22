@@ -250,9 +250,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    ///Upgrade to latest native forms issue tracked here
-    //https://github.com/OpenSRP/opensrp-client-reveal/issues/1235
-    implementation('org.smartregister:opensrp-client-native-form:1.14.7.4-FORM-CONFIG-RULES-FIX-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:2.0.8-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
