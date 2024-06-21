@@ -65,6 +65,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
 
+    private ProgressBar progressBar;
+    private TextView progressLabel;
+    private TextView syncButton;
+    private TextView syncBadge;
+
     private DrawerLayout mDrawerLayout;
 
     private BaseDrawerContract.Presenter presenter;
@@ -149,6 +154,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
         p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
+
+        progressBar = headerView.findViewById(R.id.sync_progress_bar);
+        progressLabel = headerView.findViewById(R.id.sync_progress_bar_label);
+        syncButton = headerView.findViewById(R.id.sync_button);
+        syncBadge = headerView.findViewById(R.id.sync_label);
 
         TextView offlineMapTextView = headerView.findViewById(R.id.btn_navMenu_offline_maps);
 
@@ -388,10 +398,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Override
     public void toggleProgressBarView(boolean syncing) {
-        ProgressBar progressBar = this.activity.getActivity().findViewById(R.id.sync_progress_bar);
-        TextView progressLabel = this.activity.getActivity().findViewById(R.id.sync_progress_bar_label);
-        TextView syncButton = this.activity.getActivity().findViewById(R.id.sync_button);
-        TextView syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
         if (progressBar == null || syncBadge == null)
             return;
         if (syncing && NetworkUtils.isNetworkAvailable()) { //only hide the sync button when there is internet connection
