@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.reflect.TypeToken;
 
@@ -173,6 +174,15 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
     }
 
+    private void logErrorLocationHierarchyToCrashLytics(){
+        Crashlytics.log(String.format("OperationalArea=%s", prefsUtil.getCurrentOperationalArea()));
+        Crashlytics.log(String.format("OperationalAreaID=%s", prefsUtil.getCurrentOperationalAreaId()));
+        final String username = sharedPreferences.fetchRegisteredANM();
+        Crashlytics.log(String.format("RegisteredUsername=%s", username));
+        Crashlytics.log(String.format("DefaultLocalityId=%s", sharedPreferences.fetchDefaultLocalityId(username)));
+        Crashlytics.logException(new Exception("Unable to select OA - error processing location hierarchy"));
+    }
+
     @Override
     public void onShowOperationalAreaSelector() {
         Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
@@ -183,6 +193,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         if (locationHierarchy != null) {
             view.showOperationalAreaSelector(extractLocationHierarchy());
         } else {
+            logErrorLocationHierarchyToCrashLytics();
             view.displayNotification(R.string.error_fetching_location_hierarchy_title, R.string.error_fetching_location_hierarchy);
             revealApplication.getContext().userService().forceRemoteLogin(revealApplication.getContext().allSharedPreferences().fetchRegisteredANM());
         }
