@@ -90,6 +90,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     @Override
     public void validateAndWriteValues() {
         super.validateAndWriteValues();
+        boolean showError = true;
         for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
             if (childAt instanceof RevealMapView) {
                 RevealMapView mapView = (RevealMapView) childAt;
@@ -99,6 +100,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                 String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
                 if (!validationStatus.isValid()) {
                     getInvalidFields().put(fieldKey, validationStatus);
+                    showError = !validationStatus.getErrorMessage().equalsIgnoreCase(getView().getContext().getResources().getString(R.string.register_outside_boundary_warning));
                 } else {
                     getInvalidFields().remove(fieldKey);
                     if (isFormValid() && validateFarStructures()) {
@@ -125,7 +127,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
             if (showErrorsOnSubmit()) {
                 launchErrorDialog();
                 getView().showToast(getView().getContext().getResources().getString(R.string.json_form_error_msg, this.getInvalidFields().size()));
-            } else {
+            } else if (showError) {
                 getView().showSnackBar(getView().getContext().getResources().getString(R.string.json_form_error_msg, this.getInvalidFields().size()));
             }
         }
